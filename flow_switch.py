@@ -3,7 +3,7 @@ from machine import Pin
 from time import sleep_ms
 
 class flowSw:
-    def __init__(self, sampleInterval = 1000): #was 10000
+    def __init__(self, sampleInterval = 5000): #was 10000
         self.pumpCmd = 'OFF'
         self.flowOk = True 
         self.err = 0
@@ -11,23 +11,29 @@ class flowSw:
         asyncio.create_task(self._run(sampleInterval))
 
     async def _run(self, sampleInterval):
+        _flowSw = False
         while True:
             if self.pumpCmd == 'ON':
+                if not _flowSw:
+                    self.err = 1 #Waiting flowing on headTk
                 await asyncio.sleep_ms(sampleInterval) #Delay time to check
                 _flowSw = self.flowSw.value()
                 if _flowSw: 
                     self.flowOk = True
+                    self.err = 0
                 elif not _flowSw:
                     self.flowOk = False
             else:
+                if not _flowSw:
+                    self.err = 0
                 await asyncio.sleep_ms(sampleInterval) #Delay time to check
                 _flowSw = self.flowSw.value()
                 if _flowSw: 
                     self.flowOk = False
-                    self.err = 1 #Flow sensor fault
+                    self.err = 2 #Flow sensor fault
                 elif not _flowSw:
                     self.flowOk = True
-                    self.err = 0
+
 
             print("Flow Switch = " + str(_flowSw))
             print("Flow ok = " + str(self.flowOk) + "   Error = " + str(self.err))

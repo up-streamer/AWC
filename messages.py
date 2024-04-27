@@ -1,5 +1,5 @@
 class texts:
-    sensorMsg = (
+    tankMsg = (
         "Ok",
         "Falha de leitura (CRC)",
         "Eco não detectado",
@@ -18,5 +18,6 @@ class texts:
 
     flowMsg = (
         "Ok",
+        "Aguardando a água chegar na caixa",
         "Falha no sensor de fluxo"
         )

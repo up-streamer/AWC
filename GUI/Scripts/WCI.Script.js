@@ -28,7 +28,8 @@ function getControls() {
         headTkStatus = j.headTkStatus;
         gndTkLevel = j.gndTkLevel;
         gndTkVol = j.gndTkVol;
-        gndTkStatus = j.gndTkStatus; 
+        gndTkStatus = j.gndTkStatus;
+        flowSrStatus = j.flowSrStatus; 
         console.log("jSON = " + JSON.stringify(j));
         updateReadings();
         // hide the activity widget
@@ -60,13 +61,14 @@ function updateReadings() {
     gauge.modify(getID('vertGauge1'), {values:[gndTkLevel,100]});
     gauge.modify(getID('vertGauge2'), {values:[headTklevel,100]});
 
-    if ((pumpStatus != 'Ok') || (headTkStatus != 'Ok') || (gndTkStatus != 'Ok')) {
+    if ((pumpStatus != 'Ok') || (headTkStatus != 'Ok') || (gndTkStatus != 'Ok' || flowSrStatus != 'Ok')) {
         statusFault = true;
 		$("#statustext").hide();
 		$("#statustext").empty();
 		$("#statustext").append("Bomba: " + pumpStatus + '<br/>');
 		$("#statustext").append("Caixa: " + headTkStatus + '<br/>');
-		$("#statustext").append("Cisterna: " + gndTkStatus);
+		$("#statustext").append("Cisterna: " + gndTkStatus + '<br/>');
+        $("#statustext").append("Fluxo: " + flowSrStatus);
 		$("#statustext").fadeIn("slow");
     } else {
         statusFault = false;

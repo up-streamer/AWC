@@ -21,9 +21,11 @@ Data = {
     }
 
 async def main():
-    Sensor = AJ_SR04()
+    headTk = AJ_SR04(COM = 2, sampleInterval = 1000)
+    
+    #groundTk = AJ_SR04(COM = 1, sampleInterval = 5000)
 
-    await Sensor
+    await headTk
 
     Pump = PumpControl(10, 90) # min and max percent limits
 
@@ -48,9 +50,6 @@ async def main():
     async def getC(request):
         return Data
 
-    # OLD return sample {"timeOfReading":"08\/06\/2017 16:31:38", "level":"500", 
-    # "pump": "false", "pumpMode":"true", "gndtklevel":"2500","errorCode":"0"}
-
     @app.route('/updateControls')
     async def updateC(request):
         requestArgs = request.args
@@ -68,13 +67,15 @@ async def main():
 
     async def sincData(): # Sincronize/transfer all data co-routines
         while True:
-            print("Percentage = " + Sensor.measurements.percentage + " %")
-            #print("Volume = " + Sensor.measurements.volume + " Lts")
-            #print("Tank Level = " + str(Sensor.measurements.level) + " mm")
-            print("Tank Error Code = " + str(Sensor.err))
+            print("Percentage = " + headTk.measurements.percentage + " %")
+            #print("Volume = " + headTk.measurements.volume + " Lts")
+            #print("Tank Level = " + str(headTk.measurements.level) + " mm")
+            print("Tank Error Code = " + str(headTk.err))
             print("")
-            Data["headTklevel"] = Sensor.measurements.percentage
-            Data["headTkVol"] = Sensor.measurements.volume
+            #Data["gndTkLevel"] = groundTk.measurements.percentage
+            #Data["gndTkVol"] = groundTk.measurements.volume
+            Data["headTklevel"] = headTk.measurements.percentage
+            Data["headTkVol"] = headTk.measurements.volume
             Pump.percentageLevel = Data["headTklevel"]
             Pump.mode = Data["pumpMode"]
 
@@ -88,12 +89,13 @@ async def main():
                 Pump.pumpCommand = Data["pump"]
 
             Water.pumpCmd = Pump.pumpCommand
-            Pump.sensorError = Sensor.err
+            Pump.sensorError = headTk.err
             Pump.flowOk = Water.flowOk
 
             Data["pumpStatus"] = msg.pumpMsg[Pump.err]
-            Data["headTkStatus"] = msg.sensorMsg[Sensor.err]
-            Data["flowSrStatus"] = msg.sensorMsg[Water.err]
+            Data["headTkStatus"] = msg.tankMsg[headTk.err]
+            #Data["gndTkStatus"] = msg.tankMsg[groundTk.err]
+            Data["flowSrStatus"] = msg.flowMsg[Water.err]
             print("Pump Status = " + msg.pumpMsg[Pump.err])
             await asyncio.sleep_ms(1000)
 

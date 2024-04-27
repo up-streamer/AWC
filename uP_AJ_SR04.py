@@ -12,13 +12,15 @@ import asyncio
 _PAUSE_MS = const(400)  # AJ-SR04M Acquisition delay
 
 class AJ_SR04:
-    def __init__(self, sampleInterval = 2000, filterSteps=None):
-        self.filterSteps = filterSteps
+    def __init__(self, COM = 2, sampleInterval = 2000):
         self.distance = None
         self.err = None
         _lastGoodDistance = None
         _lastGoodlevel = 0
-        self.uart = UART(2, 9600, bits=8, parity=None, stop=1)
+        if COM == 1:
+            self.uart = UART(1, 9600, bits=8, parity=None, stop=1, tx=18, rx=5)
+        else:
+            self.uart = UART(2, 9600, bits=8, parity=None, stop=1, tx=17, rx=16) # Was UART(2...
         self.measurements = Measurements(974, 250, 1000)
         asyncio.create_task(self._run(sampleInterval))
         
