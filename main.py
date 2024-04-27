@@ -27,16 +27,15 @@ async def main():
     headTk.max_volume = 1000
     headTk.start()
     await headTk
-    
-    Pump = PumpControl(10, 90) # min and max percent limits
-    Pump.start()
-    
+
     groundTk = AJ_SR04(COM = 1, sampleInterval = 5000)
     groundTk.max_distance = 974
     groundTk.min_distance = 250
     groundTk.max_volume = 10000
     groundTk.start()
     await groundTk
+    
+    Pump = PumpControl(10, 90) # min and max percent limits
 
     Water = flowSw()
 
@@ -76,16 +75,16 @@ async def main():
 
     async def sincData(): # Sincronize/transfer all data co-routines
         while True:
-            print("Percentage = " + headTk.measurements.percentage + " %")
+            #print("Percentage = " + headTk.measurements.percentage + " %")
             #print("Volume = " + headTk.measurements.volume + " Lts")
             #print("Tank Level = " + str(headTk.measurements.level) + " mm")
             #print("Tank Error Code = " + str(headTk.err))
             #print("")
-            Data[""] = groundTk.measurements.percentage
+            Data["gndTkLevel"] = groundTk.measurements.percentage
             Data["gndTkVol"] = groundTk.measurements.volume
             Data["headTklevel"] = headTk.measurements.percentage
             Data["headTkVol"] = headTk.measurements.volume
-            Pump.headTkLevel = headTk.measurements.percentage #  Data["headTklevel"]  
+            Pump.headTkLevel = headTk.measurements.percentage 
             Pump.mode = Data["pumpMode"]
 
             if Pump.mode == 'Completar' and Data["pump"] == 'ON': #Fill Up command

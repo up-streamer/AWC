@@ -9,7 +9,6 @@ class PumpControl:
     def __init__(self, startPerct, stopPerct, sampleInterval = 1000):
         self.startPerct = startPerct
         self.stopPerct = stopPerct
-        self.sampleInterval = sampleInterval
         self.headTkLevel = 0
         self.headTkErr = 0
         self.flowOk = True
@@ -20,10 +19,7 @@ class PumpControl:
         self.pump.off()
         if startPerct >= stopPerct:
             self.err = 1           #Setup limits inverted
-        #asyncio.create_task(self._run(sampleInterval))
-            
-    def start(self):
-        asyncio.create_task(self._run(self.sampleInterval))
+        asyncio.create_task(self._run(sampleInterval))
 
     def _pumpSwitch(self, sw):
         if sw:
@@ -32,7 +28,6 @@ class PumpControl:
         else:
             self.pump.off()
             self.pumpCommand = 'OFF'
-        print("pump SW = " + str(sw))
 
     async def _retry(self, sampleInterval):
         self.err = 3 #Retry
@@ -73,14 +68,9 @@ class PumpControl:
                     if levelPerct <= self.startPerct:
                         if self.pumpCommand == 'OFF':
                             self._pumpSwitch(ON)
-                    elif(levelPerct >= self.stopPerct):
+                    elif levelPerct >= self.stopPerct:
                         if self.pumpCommand == 'ON':
                             self._pumpSwitch(OFF)
-                    print("pump command from pump = " + self.pumpCommand)
-                    print("level from pump = " + str(levelPerct))
-                    print("stop level from pump " + str(self.stopPerct))
-                    print("headTkLevel from pump = " + str(self.headTkLevel))
-                    print("________________________________")
                 else:
                     if self.headTkErr:
                         self.err = 4

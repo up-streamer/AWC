@@ -97,7 +97,7 @@ var manualAutoButtonSettings = {
 };
 
 function pumpAnimation() {
-    if ((onOffButton != $('#onOffButton').val()) || (statusFault)) { // == !faultstatus
+    if ((onOffButton != $('#onOffButton').val()) || (statusFault == !faultstatus)) {
         animateGaugeOnFault();
         animatePump();
         onOffButton = $('#onOffButton').val(); 
@@ -115,7 +115,7 @@ function pumpAnimation() {
 		} else {
 			gauge.modify(getID('vertGauge2'), {busy: false});
 		}
-       // faultstatus = statusFault;
+        faultstatus = statusFault;
 	};
 
     function animatePump() {
@@ -201,9 +201,11 @@ function initWidgets() {
     statusFault = false
     faultstatus = true
     unitsVol = false
-    onOffButton = 'ON'
-    gndTkStatus = 'Ok'
+    onOffButton = 'OFF'
+    pumpStatus = 'Ok'
     headTkStatus = 'Ok'
+    gndTkStatus = 'Ok'
+    flowSrStatus = 'Ok'
 };
 
 // Set sample interval
