@@ -17,7 +17,7 @@ class PumpControl:
             self.err = 1           #Setup limits inverted
         asyncio.create_task(self._run(sampleInterval))
         
-    def _run(self, sampleInterval):
+    async def _run(self, sampleInterval):
         while True:
             percentage = float(self.percentageLevel)
             err = self.err + self.sensorError
@@ -35,6 +35,9 @@ class PumpControl:
                     self.pumpCommand = 'OFF'
                     if self.err == 2:
                         self.err = 0 # Reset Caution message
+
+            if (self.mode == 'Completar') and (self.pumpCommand == 'ON'):      
+                self.pump.on()
                     
             if self.mode == 'Manual':
                 if self.pumpCommand == 'OFF':

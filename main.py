@@ -74,12 +74,17 @@ async def main():
             Data["headTkVol"] = Sensor.measurements.volume
             Pump.percentageLevel = Data["headTklevel"]
             Pump.mode = Data["pumpMode"]
+
+            if Pump.mode == 'Completar' and Data["pump"] == 'ON': #Fill Up command
+                Pump.pumpCommand = Data["pump"]
+                Data["pumpMode"] = 'Auto'
+                           
             if Pump.mode == 'Auto':    # Pump command direction
                 Data["pump"] = Pump.pumpCommand
             else:
                 Pump.pumpCommand = Data["pump"]
             Pump.sensorError = Sensor.err
-            
+
             Data["pumpStatus"] = msg.pumpMsg[Pump.err]
             Data["headTkStatus"] = msg.sensorMsg[Sensor.err]
 

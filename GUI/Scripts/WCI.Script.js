@@ -67,7 +67,6 @@ function updateReadings() {
 		$("#statustext").append("Bomba: " + pumpStatus + '<br/>');
 		$("#statustext").append("Caixa: " + headTkStatus + '<br/>');
 		$("#statustext").append("Cisterna: " + gndTkStatus);
-		 //alert("#statustext updated!"); 
 		$("#statustext").fadeIn("slow");
     } else {
         statusFault = false;
@@ -136,39 +135,42 @@ function pumpAnimation() {
 
 // Manual/Auto button and on/off button logic
 function controlPump() {
+    $('#pump').click(function () {
+		if(($('#manualAutoButton').val() == 'Auto') && ($('#onOffButton').val() == 'OFF')){
+			$("#manualAutoButton").hide();
+			$("#manualAutoButton").val("Completar");
+			$("#onOffButton").attr('disabled', false);
+			$("#manualAutoButton").fadeIn("slow");
+        } else if ($('#manualAutoButton').val() == 'Completar') {
+            $("#manualAutoButton").val("Auto");
+            $('#onOffButton').attr('disabled', true);
+		};
+
+        buttonChange();
+	});
+
     $('#manualAutoButton').click(function () {
         if ($('#manualAutoButton').val() == 'Manual') {
             $('#manualAutoButton').val('Auto');
             $('#onOffButton').attr('disabled', true);
-            $('#fillUpButton').attr('disabled', false);
-        } else {
+        } else if ($('#manualAutoButton').val() == 'Auto'){
             $('#manualAutoButton').val('Manual');
             $('#onOffButton').attr('disabled', false);
-            $('#fillUpButton').attr('disabled', true);
         };    /* alert("Clicked!");  */
 
         buttonChange();
     });
 
     $('#onOffButton').click(function () {
-        if ($('#onOffButton').val() == 'OFF') {
+        if (($('#onOffButton').val() == 'OFF')) {
             $('#onOffButton').val('ON');
+            if ($('#manualAutoButton').val() == 'Completar'){
+                $('#onOffButton').attr('disabled', true);}
         } else {
             $('#onOffButton').val('OFF');
         };
 
         buttonChange();
-    });
-
-    $('#fillUpButton').click(function () {
-       if ( $('#manualAutoButton').val('Auto')){
-            $('#onOffButton').val('ON');
-            //alert("Clicked!");
-            
-
-       }
-
-       buttonChange();
     });
 
     $('#vertGauge1').click(function () {
@@ -180,8 +182,8 @@ function controlPump() {
     });
 
     function buttonChange() {
-        pumpAnimation();
         updateControls();
+        pumpAnimation();  
     }
     
     function toggleUnits() {
@@ -200,7 +202,6 @@ function initWidgets() {
     gndTkStatus = 'Ok'
     headTkStatus = 'Ok'
 };
-
 
 // Set sample interval
 function getControlsInterval() {
