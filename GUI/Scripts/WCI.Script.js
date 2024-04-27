@@ -1,9 +1,4 @@
-﻿statusFault = false
-faultstatus = false
-unitsVol = false
-onOffButton = "OFF"
-
-// Access 3rd gauge elements using DRY philosophy :)
+﻿// Access 3rd gauge elements using DRY philosophy :)
 function getID (obj) {
     return(document.getElementById(obj));
 }
@@ -102,30 +97,25 @@ var manualAutoButtonSettings = {
 
 function pumpAnimation() {
     if ((onOffButton != $('#onOffButton').val()) || (statusFault == !faultstatus)) {
-        //borderSet();
+        animateGaugeOnFault();
         animatePump();
-        onOffButton = $('#onOffButton').val();
-        faultstatus = statusFault;
+        onOffButton = $('#onOffButton').val(); 
     }
 
-    function borderSet() {
-        if(gndTkStatus != 'Ok'){
-            $('#groundtkdiv').addClass('alarmBorder');
-        } else {
-            $('#groundtkdiv').removeClass('alarmBorder');
-        }
-    
-        if(headTkStatus != 'Ok'){
-            $('#headtkdiv').addClass('alarmBorder');
-        } else {
-            $('#headtkdiv').removeClass('alarmBorder');
-        }
-    }
-	// Border test
-	//$('#groundtkdiv').addClass('alarmBorder');
-    //$('#headtkdiv').addClass('alarmBorder');
-	//$('#volumeGTK').addClass('alarmBorder');
-	//$('#pumpdiv').addClass('alarmBorder');
+    function animateGaugeOnFault() {
+		if(gndTkStatus != 'Ok'){
+			gauge.modify(getID('vertGauge1'), {busy: true});
+		} else {
+			gauge.modify(getID('vertGauge1'), {busy: false});
+		}
+		
+		if(headTkStatus != 'Ok'){
+			gauge.modify(getID('vertGauge2'), {busy: true});
+		} else {
+			gauge.modify(getID('vertGauge2'), {busy: false});
+		}
+        faultstatus = statusFault;
+	};
 
     function animatePump() {
         if ($('#onOffButton').val() == 'ON') {
@@ -150,9 +140,11 @@ function controlPump() {
         if ($('#manualAutoButton').val() == 'Manual') {
             $('#manualAutoButton').val('Auto');
             $('#onOffButton').attr('disabled', true);
+            $('#fillUpButton').attr('disabled', false);
         } else {
             $('#manualAutoButton').val('Manual');
             $('#onOffButton').attr('disabled', false);
+            $('#fillUpButton').attr('disabled', true);
         };    /* alert("Clicked!");  */
 
         buttonChange();
@@ -166,6 +158,17 @@ function controlPump() {
         };
 
         buttonChange();
+    });
+
+    $('#fillUpButton').click(function () {
+       if ( $('#manualAutoButton').val('Auto')){
+            $('#onOffButton').val('ON');
+            //alert("Clicked!");
+            
+
+       }
+
+       buttonChange();
     });
 
     $('#vertGauge1').click(function () {
@@ -184,12 +187,18 @@ function controlPump() {
     function toggleUnits() {
         unitsVol = !unitsVol
         updateReadings();
-        //alert("Units toggled! Units = " + unitsVol ); 
     };
 };
 function initWidgets() {
     gauge.add(getID('GroundTK'), {width:60, height:200, vertical:true, name: 'vertGauge1', limit: true, gradient: true, scale: 10, colors:['#ff0000','#00ff00'], values:[10,100]});
     gauge.add(getID('HeadTK'), {width:60, height:200, vertical:true, name: 'vertGauge2', limit: true, gradient: true, scale: 10, colors:['#ff0000','#00ff00'], values:[10,100]}); 
+    // Init Widget values
+    statusFault = false
+    faultstatus = true
+    unitsVol = false
+    onOffButton = 'ON'
+    gndTkStatus = 'Ok'
+    headTkStatus = 'Ok'
 };
 
 
