@@ -61,7 +61,7 @@ function updateReadings() {
     gauge.modify(getID('vertGauge1'), {values:[gndTkLevel,100]});
     gauge.modify(getID('vertGauge2'), {values:[headTklevel,100]});
 
-    if ((pumpStatus != 'Ok') || (headTkStatus != 'Ok') || (gndTkStatus != 'Ok' || flowSrStatus != 'Ok')) {
+    if ((pumpStatus != 'Ok') || (headTkStatus != 'Ok') || (gndTkStatus != 'Ok') || (flowSrStatus != 'Ok')) {
         statusFault = true;
 		$("#statustext").hide();
 		$("#statustext").empty();
@@ -97,7 +97,7 @@ var manualAutoButtonSettings = {
 };
 
 function pumpAnimation() {
-    if ((onOffButton != $('#onOffButton').val()) || (statusFault == !faultstatus)) {
+    if ((onOffButton != $('#onOffButton').val()) || (statusFault)) { // == !faultstatus
         animateGaugeOnFault();
         animatePump();
         onOffButton = $('#onOffButton').val(); 
@@ -115,7 +115,7 @@ function pumpAnimation() {
 		} else {
 			gauge.modify(getID('vertGauge2'), {busy: false});
 		}
-        faultstatus = statusFault;
+       // faultstatus = statusFault;
 	};
 
     function animatePump() {

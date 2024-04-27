@@ -35,8 +35,8 @@ class flowSw:
                     self.flowOk = True
 
 
-            print("Flow Switch = " + str(_flowSw))
-            print("Flow ok = " + str(self.flowOk) + "   Error = " + str(self.err))
+            #print("Flow Switch = " + str(_flowSw))
+            #print("Flow ok = " + str(self.flowOk) + "   Error = " + str(self.err))
 
 
 # For tests       
