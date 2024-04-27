@@ -39,31 +39,31 @@
 <body>
 
 
-    <div id="controls" class="controls">
+    <div  id="controls" class="controls">
         <fieldset>
             <h2>Controls</h2>
             <div id="paneldiv">
-                <div Class="controlsContainer">
+                <div id="groundtkdiv" Class="controlsContainer">
                     <p class="label">Ground TK</p>
                     <div id="GroundTK" class="vertGaugeContainer">
                     </div>
-                    <p id="volumeGTK" class="label">0000 Lts</p>
+                    <p id="volumeGTK" class="label">---- Lts</p>
                 </div>
                 
                 <div id="pumpdiv" Class="controlsContainer">
                     <p class="label">Pump</p>
-                    <input type="button" id="manualAutoButton" value="Auto" class="settinglabel" />
+                    <input type="button" id="manualAutoButton" value="Auto" class="settingLabel" />
                     <img id="pump" alt="pump" src="Content/images/pumpRound_Off.png "
                         style="display: block; margin: auto; width:50%;padding-top: 5%;">
                     <!--    <div class="clear">&nbsp;</div> -->
-                    <input type="button" id="onOffButton" value="OFF" class="settinglabel" />
+                    <input type="button" id="onOffButton" value="OFF" class="settingLabel" />
                 </div>
                 
-                <div Class="controlsContainer">
+                <div id="headtkdiv" Class="controlsContainer">
                     <p class="label">Head TK</p>
                     <div id="HeadTK" class="vertGaugeContainer">
                     </div>
-                    <p id="volumeHTK" class="label">0000 Lts</p>
+                    <p id="volumeHTK" class="label">---- Lts</p>
                 </div>
             </div>
         </fieldset>
@@ -75,13 +75,13 @@
     <div id="statusdiv" style="float:left; height:50px; width:100px">
 
         <p id="waiting" style="float:left; text-align: center;  display: none;">
-            <span>Wait...</span>
+            <span>Aguarde...</span>
             <img src='ajax-loader.gif' />
         </p>
     </div>
 
     <div id="statustextdiv" style="display: inline-block">
-        <p id="statustext" class="label"></p>
+        <p id="statustext" class="messageBox"></p>
     </div>
 
 

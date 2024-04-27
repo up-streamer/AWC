@@ -7,10 +7,10 @@ from pump_control import PumpControl
 from messages import texts
 
 Data = {
-    "pumpMode":'Auto',   
     "pump":'OFF',
+    "pumpMode":'Auto',   
     "pumpStatus":'Ok',
-    "headTklevel":50,        # Corrected/added Data keys! Go match GUI.
+    "headTklevel":50,
     "headTkVol":1234,
     "headTkStatus":'Ok',
     "gndTkLevel":75,

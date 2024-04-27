@@ -8,14 +8,12 @@
 .label {
     text-align: center;
 }
-/* New class; for buttons*/
-.settings-setter
-{
-    margin: auto;
-    margin-top: 5px; 
+
+.messageBox {
+    text-align: left;
 }
 
-.settinglabel 
+.settingLabel 
 {
     padding: 5px 5px 5px 5px;
     display: block;
@@ -38,4 +36,12 @@
 .controls
 {
     background-image: url("images/backgrnd.jpg");
+}
+
+.alarmBorder
+{
+    border-color: red;
+    border-style: dotted;
+    border-width: medium;
+    border-collapse: collapse;
 }

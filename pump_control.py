@@ -13,14 +13,13 @@ class PumpControl:
         self.err = 0
         self.pump = Pin(2, Pin.OUT)
         self.pump.off()
-        if startPerct >= stopPerct:            #Good setup
-            self.err = 1
+        if startPerct >= stopPerct:            
+            self.err = 1           #Setup limits inverted
         asyncio.create_task(self._run(sampleInterval))
         
     def _run(self, sampleInterval):
         while True:
             percentage = float(self.percentageLevel)
-            print("Pump Percentage Level = " + str(self.percentageLevel))
             err = self.err + self.sensorError
             
             if self.mode == 'Auto':
@@ -33,6 +32,9 @@ class PumpControl:
                         self.pumpCommand = 'OFF'
                 else:
                     self.pump.off()
+                    self.pumpCommand = 'OFF'
+                    if self.err == 2:
+                        self.err = 0 # Reset Caution message
                     
             if self.mode == 'Manual':
                 if self.pumpCommand == 'OFF':

@@ -1,5 +1,7 @@
-﻿var Demo = false;
-var pumpWarnAnimation = false; // For future use
+﻿statusFault = false
+faultstatus = false
+unitsVol = false
+onOffButton = "OFF"
 
 // Access 3rd gauge elements using DRY philosophy :)
 function getID (obj) {
@@ -32,13 +34,11 @@ function getControls() {
         gndTkLevel = j.gndTkLevel;
         gndTkVol = j.gndTkVol;
         gndTkStatus = j.gndTkStatus; 
-        console.log("level = " + headTklevel);
         console.log("jSON = " + JSON.stringify(j));
         updateReadings();
         // hide the activity widget
-        $("#waiting").hide(1000);
+        $("#waiting").fadeOut("slow");
     });
-
 }
 
 function updateControls() {
@@ -56,77 +56,39 @@ function updateControls() {
 
     }, function (j) {
         // hide the activity widget
-        $("#waiting").hide(1000);
+        $("#waiting").fadeOut("slow");
     });
-
 }
 
 // Control Panel
-
 function updateReadings() {
     gauge.modify(getID('vertGauge1'), {values:[gndTkLevel,100]});
     gauge.modify(getID('vertGauge2'), {values:[headTklevel,100]});
-    $("#volumeGTK").text(gndTkVol  + " Lts");
-    $("#volumeHTK").text(headTkVol  + " Lts");
-    $("#statustextdiv").text(headTkStatus);
-    if ((headTkStatus != 'Ok') || (pumpStatus != 'Ok')) {
-        pumpWarnAnimation = true;
-        } else {
-            pumpWarnAnimation = false;
-        }
+
+    if ((pumpStatus != 'Ok') || (headTkStatus != 'Ok') || (gndTkStatus != 'Ok')) {
+        statusFault = true;
+		$("#statustext").hide();
+		$("#statustext").empty();
+		$("#statustext").append("Bomba: " + pumpStatus + '<br/>');
+		$("#statustext").append("Caixa: " + headTkStatus + '<br/>');
+		$("#statustext").append("Cisterna: " + gndTkStatus);
+		 //alert("#statustext updated!"); 
+		$("#statustext").fadeIn("slow");
+    } else {
+        statusFault = false;
+		$("#statustext").fadeOut("slow");
+		$("#statustext").empty();
+    }
+
+    if (unitsVol){
+        $('#volumeGTK').text(gndTkVol + " Lts");
+        $('#volumeHTK').text(headTkVol  + " Lts");
+    } else {
+        $('#volumeGTK').text(gndTkLevel  + " %");
+        $('#volumeHTK').text(headTklevel  + " %");
+    };
+
     pumpAnimation();
-}
-var barGaugePalette = ['#FF0000', '#FF6600', '#FF9900', '#669900', '#009933'];
-
-var GaugeSettings = {
-    width: '100%',
-    height: '100%',
-    max: 100,
-    startAngle: 0,
-    endAngle: 360,
-    useGradient: true,
-
-    title: {
-        text: 'In-Ground Tank',
-        subtitle: {
-            text: 'Volume',
-        },
-    },
-    values: [1],
-    relativeInnerRadius: 0.6,
-    tooltip: {
-        visible: true,
-        formatFunction: function (val) {
-            return val * 100 + ' Liters';
-        }
-    },
-    labels: {
-        formatFunction: function (value) {
-            return value + ' %';
-        },
-        precision: 0,
-        indent: 0,
-        connectorWidth: 1
-    },
-
-    formatFunction: function (value, index, color) {
-
-        if (value < 20) {
-            return barGaugePalette[0];
-        }
-        if (value < 40) {
-            return barGaugePalette[1];
-        }
-        if (value < 60) {
-            return barGaugePalette[2];
-        }
-        if (value < 80) {
-            return barGaugePalette[3];
-        }
-        if (value <= 100) {
-            return barGaugePalette[4];
-        }
-    },
 };
 
 // Buttons settings
@@ -138,20 +100,48 @@ var manualAutoButtonSettings = {
     checked: 'true',
 };
 
-
 function pumpAnimation() {
-    if (onOffButton != $('#onOffButton').val()) {
-        if ($('#onOffButton').val() == 'ON') {
-            if (pumpWarnAnimation) {
-                $('#pump').fadeTo(100, 0.3, function () { $(this).attr("src", "Content/images/pumpRound_Warn.png").fadeTo(100, 1.00); });
-            } else {
-                $('#pump').fadeTo(100, 0.3, function () { $(this).attr("src", "Content/images/pumpRound_On.png").fadeTo(500, 1.00); });
-            };
+    if ((onOffButton != $('#onOffButton').val()) || (statusFault == !faultstatus)) {
+        //borderSet();
+        animatePump();
+        onOffButton = $('#onOffButton').val();
+        faultstatus = statusFault;
+    }
+
+    function borderSet() {
+        if(gndTkStatus != 'Ok'){
+            $('#groundtkdiv').addClass('alarmBorder');
         } else {
-            $('#pump').fadeTo(100, 0.3, function () { $(this).attr("src", "Content/images/pumpRound_Off.png").fadeTo(100, 1.00); });
+            $('#groundtkdiv').removeClass('alarmBorder');
+        }
+    
+        if(headTkStatus != 'Ok'){
+            $('#headtkdiv').addClass('alarmBorder');
+        } else {
+            $('#headtkdiv').removeClass('alarmBorder');
+        }
+    }
+	// Border test
+	//$('#groundtkdiv').addClass('alarmBorder');
+    //$('#headtkdiv').addClass('alarmBorder');
+	//$('#volumeGTK').addClass('alarmBorder');
+	//$('#pumpdiv').addClass('alarmBorder');
+
+    function animatePump() {
+        if ($('#onOffButton').val() == 'ON') {
+			if (statusFault) {
+				$('#pump').fadeTo(100, 0.3, function () { $(this).attr("src", "Content/images/pumpRound_Warn.png").fadeTo(500, 1.00); });
+			} else {
+				$('#pump').fadeTo(100, 0.3, function () { $(this).attr("src", "Content/images/pumpRound_On.png").fadeTo(500, 1.00); });
+			}				
+        } else {
+			if (statusFault && ($("#manualAutoButton").val() == "Auto")) {
+				$('#pump').fadeTo(100, 0.3, function () { $(this).attr("src", "Content/images/pumpRound_Warn.png").fadeTo(500, 1.00); });
+			} else {
+				$('#pump').fadeTo(100, 0.3, function () { $(this).attr("src", "Content/images/pumpRound_Off.png").fadeTo(100, 1.00); });
+			}			
+        };
     };
-}
-    onOffButton = $('#onOffButton').val();
 };
 
 // Manual/Auto button and on/off button logic
@@ -165,10 +155,6 @@ function controlPump() {
             $('#onOffButton').attr('disabled', false);
         };    /* alert("Clicked!");  */
 
-/*         if ($('#manualAutoButton').val() == 'Auto') {
-            $('#onOffButton').attr('disabled', 'disabled');
-        } else {('#onOffButton').removeAttr('disabled')};
-        } */
         buttonChange();
     });
 
@@ -178,72 +164,38 @@ function controlPump() {
         } else {
             $('#onOffButton').val('OFF');
         };
+
         buttonChange();
     });
-    /*     $('#manualAutoButton').mouseenter(function () {
-            $('#manualAutoButton').on('click', manualAutoButtonChecked);
-        });
-    
-        $('#manualAutoButton').mouseleave(function () {
-            $('#manualAutoButton').off('click', manualAutoButtonChecked);
-        });
-    
-        function manualAutoButtonChecked() {
-            var checked = $("#manualAutoButton").jqxSwitchButton('checked');
-            if (checked) {
-                $('#onOffButton').jqxSwitchButton({ disabled: false });
-            } else $('#onOffButton').jqxSwitchButton({ disabled: true });
-        };
-    
-        $('#onOffButton').mouseenter(function () {
-            $('#onOffButton').on('change', onOffButtonChange);
-        });
-    
-        $('#onOffButton').mouseleave(function () {
-            $('#onOffButton').off('change', onOffButtonChange);
-        }); */
 
-       function buttonChange() {
-           pumpAnimation();
-           updateControls();
-       }
+    $('#vertGauge1').click(function () {
+        toggleUnits();
+    });
+
+    $('#vertGauge2').click(function () {
+        toggleUnits();
+    });
+
+    function buttonChange() {
+        pumpAnimation();
+        updateControls();
+    }
+    
+    function toggleUnits() {
+        unitsVol = !unitsVol
+        updateReadings();
+        //alert("Units toggled! Units = " + unitsVol ); 
+    };
 };
 function initWidgets() {
-
-        gauge.add(getID('GroundTK'), {width:60, height:200, vertical:true, name: 'vertGauge1', limit: true, gradient: true, scale: 10, colors:['#ff0000','#00ff00'], values:[10,100]});
-
-        gauge.add(getID('HeadTK'), {width:60, height:200, vertical:true, name: 'vertGauge2', limit: true, gradient: true, scale: 10, colors:['#ff0000','#00ff00'], values:[10,100]}); 
+    gauge.add(getID('GroundTK'), {width:60, height:200, vertical:true, name: 'vertGauge1', limit: true, gradient: true, scale: 10, colors:['#ff0000','#00ff00'], values:[10,100]});
+    gauge.add(getID('HeadTK'), {width:60, height:200, vertical:true, name: 'vertGauge2', limit: true, gradient: true, scale: 10, colors:['#ff0000','#00ff00'], values:[10,100]}); 
 };
 
-// Simulate increasing values for Gauges
-var increaseInterval;
-function demoDisplay() {
-    if ($("#onOffButton").val()) {
-        i = 0;
-        increaseInterval = setInterval(
-            newValue
-            , 1500);
-    }
-    else {
-        i = 0;
-        newValue();
-        setTimeout(clearInterval(increaseInterval), 1000);
-    }
 
-    function newValue() {
-        $("#levelGauge").val([i]);
-        $("#GndTKLevelGauge").val([i]);
-        $("#Gauge22").val([i]);
-        gauge.modify(getID('vertGauge1'), {values:[i,100]});
-
-        i = i + 10
-        if (i > 100) { i = 0; }
-    }
-}
-
-// For future use
+// Set sample interval
 function getControlsInterval() {
     setInterval(
-        "getControls()"
-    , 5000);
+        'getControls()'
+    , 2000);
     };
