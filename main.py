@@ -22,10 +22,16 @@ Data = {
 
 async def main():
     headTk = AJ_SR04(COM = 2, sampleInterval = 1000)
-    
-    #groundTk = AJ_SR04(COM = 1, sampleInterval = 5000)
-
+    headTk.max_distance = 974
+    headTk.min_distance = 250
+    headTk.max_volume = 1000
     await headTk
+    
+    groundTk = AJ_SR04(COM = 1, sampleInterval = 5000)
+    groundTk.max_distance = 974
+    groundTk.min_distance = 250
+    groundTk.max_volume = 10000
+    await groundTk
 
     Pump = PumpControl(10, 90) # min and max percent limits
 
@@ -72,11 +78,11 @@ async def main():
             #print("Tank Level = " + str(headTk.measurements.level) + " mm")
             print("Tank Error Code = " + str(headTk.err))
             print("")
-            #Data["gndTkLevel"] = groundTk.measurements.percentage
-            #Data["gndTkVol"] = groundTk.measurements.volume
+            Data["gndTkLevel"] = groundTk.measurements.percentage
+            Data["gndTkVol"] = groundTk.measurements.volume
             Data["headTklevel"] = headTk.measurements.percentage
             Data["headTkVol"] = headTk.measurements.volume
-            Pump.percentageLevel = Data["headTklevel"]
+            Pump.headTklevel = Data["headTklevel"]
             Pump.mode = Data["pumpMode"]
 
             if Pump.mode == 'Completar' and Data["pump"] == 'ON': #Fill Up command
@@ -89,12 +95,12 @@ async def main():
                 Pump.pumpCommand = Data["pump"]
 
             Water.pumpCmd = Pump.pumpCommand
-            Pump.sensorError = headTk.err
+            Pump.headTkErr = headTk.err
             Pump.flowOk = Water.flowOk
 
             Data["pumpStatus"] = msg.pumpMsg[Pump.err]
             Data["headTkStatus"] = msg.tankMsg[headTk.err]
-            #Data["gndTkStatus"] = msg.tankMsg[groundTk.err]
+            Data["gndTkStatus"] = msg.tankMsg[groundTk.err]
             Data["flowSrStatus"] = msg.flowMsg[Water.err]
             print("Pump Status = " + msg.pumpMsg[Pump.err])
             await asyncio.sleep_ms(1000)

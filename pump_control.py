@@ -9,18 +9,18 @@ class PumpControl:
     def __init__(self, startPerct, stopPerct, sampleInterval = 1000):
         self.startPerct = startPerct
         self.stopPerct = stopPerct
-        self.percentageLevel = 0
-        self.flowOk = True 
-        self.sensorError = 0
+        self.headTkLevel = 0
+        self.headTkErr = 0
+        self.flowOk = True
         self.err = 0
         self.mode = 'Auto'
         self.pumpCommand = 'OFF'
         self.pump = Pin(2, Pin.OUT)
         self.pump.off()
-        if startPerct >= stopPerct:            
+        if startPerct >= stopPerct:
             self.err = 1           #Setup limits inverted
         asyncio.create_task(self._run(sampleInterval))
-        
+
     def _pumpSwitch(self, sw):
         if sw:
             self.pump.on()
@@ -28,12 +28,12 @@ class PumpControl:
         else:
             self.pump.off()
             self.pumpCommand = 'OFF'       
-        
+
     async def _retry(self, sampleInterval):
         self.err = 3 #Retry
         for attempt in range(3):
             for delay in range (10): #Was 15
-                if self.mode == 'Auto' and not self.sensorError:
+                if self.mode == 'Auto' and not self.headTkErr:
                     await asyncio.sleep_ms(sampleInterval)
                 else:
                     self._pumpSwitch(OFF)
@@ -42,7 +42,7 @@ class PumpControl:
             self._pumpSwitch(ON)
 
             for delay in range (10):  #Was 30
-                if self.mode == 'Auto' and not self.sensorError:
+                if self.mode == 'Auto' and not self.headTkErr:
                     await asyncio.sleep_ms(sampleInterval)
                 else:
                     self._pumpSwitch(OFF)
@@ -60,19 +60,19 @@ class PumpControl:
 
     async def _run(self, sampleInterval):
         while True:
-            percentage = float(self.percentageLevel)
-            err = self.err + self.sensorError
+            levelPerct = float(self.headTkLevel)
+            err = self.err + self.headTkErr
 
             if self.mode == 'Auto':
                 if err == 0  and self.flowOk == True:
-                    if percentage <= self.startPerct:
+                    if levelPerct <= self.startPerct:
                         if self.pumpCommand == 'OFF':
                             self._pumpSwitch(ON)
-                    elif(percentage >= self.stopPerct):
+                    elif(levelPerct >= self.stopPerct):
                         if self.pumpCommand == 'ON':
                             self._pumpSwitch(OFF)
                 else:
-                    if self.sensorError:
+                    if self.headTkErr:
                         self.err = 4
 
                     if self.err == 2:
@@ -80,7 +80,7 @@ class PumpControl:
 
                     self._pumpSwitch(OFF)
 
-                    if not (err or self.flowOk) and percentage <= self.startPerct:
+                    if not (err or self.flowOk) and levelPerct <= self.startPerct:
                         await self._retry(sampleInterval)
 
             if (self.mode == 'Completar') and (self.pumpCommand == 'ON'):      

@@ -40,26 +40,25 @@
 
     <div  id="controls" class="controls">
         <fieldset>
-            <h2>Controls</h2>
+            <h2>Controles</h2>
             <div id="paneldiv">
                 <div id="groundtkdiv" Class="controlsContainer">
-                    <p class="label">Ground TK</p>
+                    <p class="label">Cisterna</p>
                     <div id="GroundTK" class="vertGaugeContainer">
                     </div>
                     <p id="volumeGTK" class="label">---- Lts</p>
                 </div>
                 
                 <div id="pumpdiv" Class="controlsContainer">
-                    <p class="label">Pump</p>
+                    <p class="label">Bomba</p>
                     <input type="button" id="manualAutoButton" value="Auto" class="settingLabel" />
-                    <img id="pump" alt="pump" src="Content/images/pumpRound_Off.png "
+                    <img id="pump" alt="pump" src="Content/images/pumpRound_Off.png"
                         style="display: block; margin: auto; width:50%;padding-top: 5%;">
-                    <!--    <div class="clear">&nbsp;</div> -->
                     <input type="button" id="onOffButton" value="OFF" class="settingLabel" />
                 </div>
                 
                 <div id="headtkdiv" Class="controlsContainer">
-                    <p class="label">Head TK</p>
+                    <p class="label">Caixa D'água</p>
                     <div id="HeadTK" class="vertGaugeContainer">
                     </div>
                     <p id="volumeHTK" class="label">---- Lts</p>
@@ -69,12 +68,11 @@
     </div>
 
     <!-- Show error messages and infos -->
-    <div id="statusdiv" style="float:left; height:50px; width:100px">
-
-        <p id="waiting" style="float:left; text-align: center;  display: none;">
-            <span>Aguarde </span>
-            <img src='ajax-loader.gif' />
-        </p>
+    <div id="statusdiv" style="float:left; height:100px; width:100px">
+        <div id="waiting" style="float:left; text-align: center; display: none">
+            <span>Aguarde</span>
+            <div class="loader" style="margin: auto"></div>
+        </div>
     </div>
 
     <div id="statustextdiv" style="display: inline-block">
