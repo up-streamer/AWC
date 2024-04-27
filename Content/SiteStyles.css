@@ -2,7 +2,7 @@
     font-family: Verdana, Segoe UI, Helvetica Neue, Trebuchet MS;
     width: 800px;
     margin-left: auto;
-    margin-right: auto;   
+    margin-right: auto; 
 }
 
 .label {
@@ -26,16 +26,11 @@
 .controlsContainer
 {
     float: left;
-    height: 300px;
+    height: 250px;
     width: 250px;
 }
 
 .vertGaugeContainer
 {
-    padding: 0em 0 0 6em;
-}
-
-.controls
-{
-    background-image: url("images/backgrnd.jpg");
+    padding: 0em 0 0 7em;
 }

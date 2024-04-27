@@ -18,8 +18,8 @@ class AJ_SR04:
         self.err = None
         _lastGoodDistance = None
         _lastGoodlevel = 0
-        _err = 0 # May be solution for single error variable...
         self.uart = UART(2, 9600, bits=8, parity=None, stop=1)
+        self.measurements = Measurements(974, 250, 1000)
         asyncio.create_task(self._run(sampleInterval))
         
     def __iter__(self):  # Await 1st reading
@@ -34,6 +34,9 @@ class AJ_SR04:
         while True:
             await asyncio.sleep_ms(sampleInterval)
             self.distance = await self._updDistance()
+            self.measurements.__updMeasurements(self.distance)
+            if self.err == 0: # Error msg priority sensor error > measurements error
+                self.err = self.measurements.err
                     
     async def _updDistance(self):
         global _lastGoodDistance
@@ -74,12 +77,11 @@ class Measurements:
         self.max_distance = max_distance # Min level
         self.min_distance = min_distance # Max level
         self.max_level = self.max_distance - self.min_distance
+        self.tolerance = (self.max_distance - self.min_distance) * 0.05
         global _lastGoodlevel
         _lastGoodlevel = 0
-        #global _err
-        #_err = 0
           
-    def updMeasurements(self, distance):
+    def __updMeasurements(self, distance):
         if self.max_distance > self.min_distance:
             self.err = 0
         else:
@@ -88,9 +90,7 @@ class Measurements:
         def calc(dist):
             global _lastGoodlevel
             if self.err == 0:
-                tolerance = (self.max_distance - self.min_distance) * 0.05
-                print("  Tolerance = " + str(tolerance))
-                if (dist < (self.max_distance + tolerance)) and (dist > (self.min_distance - tolerance)): # Good reading
+                if (dist < (self.max_distance + self.tolerance)) and (dist > (self.min_distance - self.tolerance)): # Good reading
                     level = self.max_distance - dist
                     self.err == 0
                     _lastGoodlevel = level

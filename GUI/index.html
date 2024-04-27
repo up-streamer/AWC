@@ -14,14 +14,14 @@
     <link href="https://www.apache.org/licenses/LICENSE-2.0" rel="license" type="text/html" />
 
     <link href="/favicon.ico" rel="shortcut icon">
-    <script src="Scripts/jquery-3.4.1.min.js" type="text/javascript"></script>
+    <script src="Scripts/jquery-3.7.1.min.js" type="text/javascript"></script>
    <!--  <link href="Content\jquery-ui.css" rel="stylesheet" type="text/css" /> -->
 
     <link href="Content/SiteStyles.css" rel="stylesheet" type="text/css" />
 
     <script src="Scripts/WCI.Script.js" type="text/javascript"></script>
     <script src="Scripts/Netzgesta.Gauge.js" type="text/javascript"></script>
-
+  
     <script type="text/javascript">
         $(document).ready(function () {
 
@@ -29,7 +29,7 @@
             initWidgets();
             //Starts pump control buttons;
             controlPump();
-
+            $('#onOffButton').attr('disabled', true);
             // Update readings and status cyclic at 5000ms
             getControlsInterval();
         });
@@ -39,7 +39,7 @@
 <body>
 
 
-    <div id="controls">
+    <div id="controls" class="controls">
         <fieldset>
             <h2>Controls</h2>
             <div id="paneldiv">
@@ -47,11 +47,12 @@
                     <p class="label">Ground TK</p>
                     <div id="GroundTK" class="vertGaugeContainer">
                     </div>
+                    <p id="volumeGTK" class="label">0000 Lts</p>
                 </div>
                 
                 <div id="pumpdiv" Class="controlsContainer">
                     <p class="label">Pump</p>
-                    <input type="button" id="manualAutoButton" value="Manual" class="settinglabel" />
+                    <input type="button" id="manualAutoButton" value="Auto" class="settinglabel" />
                     <img id="pump" alt="pump" src="Content/images/pumpRound_Off.png "
                         style="display: block; margin: auto; width:50%;padding-top: 5%;">
                     <!--    <div class="clear">&nbsp;</div> -->
@@ -62,6 +63,7 @@
                     <p class="label">Head TK</p>
                     <div id="HeadTK" class="vertGaugeContainer">
                     </div>
+                    <p id="volumeHTK" class="label">0000 Lts</p>
                 </div>
             </div>
         </fieldset>
@@ -73,12 +75,13 @@
     <div id="statusdiv" style="float:left; height:50px; width:100px">
 
         <p id="waiting" style="float:left; text-align: center;  display: none;">
-            <img src='ajax-loader.gif' />
             <span>Wait...</span>
+            <img src='ajax-loader.gif' />
         </p>
     </div>
 
     <div id="statustextdiv" style="display: inline-block">
+        <p id="statustext" class="label"></p>
     </div>
 
 

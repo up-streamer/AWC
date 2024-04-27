@@ -1,7 +1,6 @@
 ﻿var Demo = false;
 var pumpWarnAnimation = false; // For future use
-var level;
-var gndtklevel;
+
 // Access 3rd gauge elements using DRY philosophy :)
 function getID (obj) {
     return(document.getElementById(obj));
@@ -14,7 +13,7 @@ function getControls() {
       "pump": "false", "pumpMode":"true", "gndtklevel":"2500","errorCode":"0"}] */
 
     // show the activity widget
-    $("#waiting").show(1000);
+    $("#waiting").show();
 
     /* "http://123.456.789.000/getControls" */
     var hostName = window.location.hostName
@@ -23,12 +22,17 @@ function getControls() {
 
     $.getJSON(jsonURL, "", function (j) {
         // walk the responses and transfer it to objects. ErroCode Key is for future use
-        // Level and gndtklevel range 0 to 100
+        // headTklevel and gndtklevel range 0 to 100
         $("#onOffButton").val(j.pump);
         $("#manualAutoButton").val(j.pumpMode);
-        level = j.level;
-        gndtklevel = j.gndtklevel; 
-        console.log("level = " + level);
+        pumpStatus = j.pumpStatus;
+        headTklevel = j.headTklevel;
+        headTkVol = j.headTkVol;
+        headTkStatus = j.headTkStatus;
+        gndTkLevel = j.gndTkLevel;
+        gndTkVol = j.gndTkVol;
+        gndTkStatus = j.gndTkStatus; 
+        console.log("level = " + headTklevel);
         console.log("jSON = " + JSON.stringify(j));
         updateReadings();
         // hide the activity widget
@@ -40,8 +44,8 @@ function getControls() {
 function updateControls() {
 
     // show the activity widget
-    $("#waiting").show(1000);
-
+    $("#waiting").show();
+    //updateReadings();
     //Send a request to the server, update commands to reflect buttons state.
     $.getJSON("/updateControls", {
         "Pump": $("#onOffButton").val(), 
@@ -60,8 +64,17 @@ function updateControls() {
 // Control Panel
 
 function updateReadings() {
-    gauge.modify(getID('vertGauge1'), {values:[level,100]});
-    gauge.modify(getID('vertGauge2'), {values:[gndtklevel,100]});
+    gauge.modify(getID('vertGauge1'), {values:[gndTkLevel,100]});
+    gauge.modify(getID('vertGauge2'), {values:[headTklevel,100]});
+    $("#volumeGTK").text(gndTkVol  + " Lts");
+    $("#volumeHTK").text(headTkVol  + " Lts");
+    $("#statustextdiv").text(headTkStatus);
+    if ((headTkStatus != 'Ok') || (pumpStatus != 'Ok')) {
+        pumpWarnAnimation = true;
+        } else {
+            pumpWarnAnimation = false;
+        }
+    pumpAnimation();
 }
 var barGaugePalette = ['#FF0000', '#FF6600', '#FF9900', '#669900', '#009933'];
 
@@ -127,15 +140,18 @@ var manualAutoButtonSettings = {
 
 
 function pumpAnimation() {
-    if ($('#onOffButton').val() == 'ON') {
-        if (pumpWarnAnimation) {
-            $('#pump').fadeTo(100, 0.3, function () { $(this).attr("src", "Content/images/pumpRound_Warn.png").fadeTo(100, 1.00); });
+    if (onOffButton != $('#onOffButton').val()) {
+        if ($('#onOffButton').val() == 'ON') {
+            if (pumpWarnAnimation) {
+                $('#pump').fadeTo(100, 0.3, function () { $(this).attr("src", "Content/images/pumpRound_Warn.png").fadeTo(100, 1.00); });
+            } else {
+                $('#pump').fadeTo(100, 0.3, function () { $(this).attr("src", "Content/images/pumpRound_On.png").fadeTo(500, 1.00); });
+            };
         } else {
-            $('#pump').fadeTo(100, 0.3, function () { $(this).attr("src", "Content/images/pumpRound_On.png").fadeTo(500, 1.00); });
-        };
-    } else {
-        $('#pump').fadeTo(100, 0.3, function () { $(this).attr("src", "Content/images/pumpRound_Off.png").fadeTo(100, 1.00); });
+            $('#pump').fadeTo(100, 0.3, function () { $(this).attr("src", "Content/images/pumpRound_Off.png").fadeTo(100, 1.00); });
     };
+}
+    onOffButton = $('#onOffButton').val();
 };
 
 // Manual/Auto button and on/off button logic
@@ -189,7 +205,7 @@ function controlPump() {
 
        function buttonChange() {
            pumpAnimation();
-           updateControls();      
+           updateControls();
        }
 };
 function initWidgets() {
