@@ -1,0 +1,87 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Water Level Controller</title>
+
+    <meta name="description"
+        content="A Simplified version of Water level controller Interface using HTML5 and javascript" />
+    <meta name="keywords" content="HTML5,CSS,JavaScript,IOT">
+    <meta name="author" content="tipsforiot.wordpress.com - Ricardo Santos">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="https://www.apache.org/licenses/LICENSE-2.0" rel="license" type="text/html" />
+
+    <link href="/favicon.ico" rel="shortcut icon">
+    <script src="Scripts/jquery-3.4.1.min.js" type="text/javascript"></script>
+   <!--  <link href="Content\jquery-ui.css" rel="stylesheet" type="text/css" /> -->
+
+    <link href="Content/SiteStyles.css" rel="stylesheet" type="text/css" />
+
+    <script src="Scripts/WCI.Script.js" type="text/javascript"></script>
+    <script src="Scripts/Netzgesta.Gauge.js" type="text/javascript"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            // Initialize widgets;
+            initWidgets();
+            //Starts pump control buttons;
+            controlPump();
+
+            // Update readings and status cyclic at 5000ms
+            getControlsInterval();
+        });
+    </script>
+</head>
+
+<body>
+
+
+    <div id="controls">
+        <fieldset>
+            <h2>Controls</h2>
+            <div id="paneldiv">
+                <div Class="controlsContainer">
+                    <p class="label">Ground TK</p>
+                    <div id="GroundTK" class="vertGaugeContainer">
+                    </div>
+                </div>
+                
+                <div id="pumpdiv" Class="controlsContainer">
+                    <p class="label">Pump</p>
+                    <input type="button" id="manualAutoButton" value="Manual" class="settinglabel" />
+                    <img id="pump" alt="pump" src="Content/images/pumpRound_Off.png "
+                        style="display: block; margin: auto; width:50%;padding-top: 5%;">
+                    <!--    <div class="clear">&nbsp;</div> -->
+                    <input type="button" id="onOffButton" value="OFF" class="settinglabel" />
+                </div>
+                
+                <div Class="controlsContainer">
+                    <p class="label">Head TK</p>
+                    <div id="HeadTK" class="vertGaugeContainer">
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+    </div>
+
+
+
+    <!-- Sections below for future use -->
+    <div id="statusdiv" style="float:left; height:50px; width:100px">
+
+        <p id="waiting" style="float:left; text-align: center;  display: none;">
+            <img src='ajax-loader.gif' />
+            <span>Wait...</span>
+        </p>
+    </div>
+
+    <div id="statustextdiv" style="display: inline-block">
+    </div>
+
+
+</body>
+
+</html>
