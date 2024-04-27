@@ -156,6 +156,7 @@ function controlPump() {
         } else if ($('#manualAutoButton').val() == 'Auto'){
             $('#manualAutoButton').val('Manual');
             $('#onOffButton').attr('disabled', false);
+            $('#onOffButton').val('OFF');
         };    /* alert("Clicked!");  */
 
         buttonChange();

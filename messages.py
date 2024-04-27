@@ -10,7 +10,13 @@ class texts:
     pumpMsg = (
         "Ok",
         "Valores de referencia invertidos",
-        "Cuidado! Bomba em manual, sem proteção"
+        "Cuidado! Bomba em manual, sem proteção",
+        "Tentando partir...",
+        "Falha no sensor de nível durante bombeio",
+        "Após 3 tentativas a água não chegou na caixa"
         )
 
-
+    flowMsg = (
+        "Ok",
+        "Falha no sensor de fluxo"
+        )

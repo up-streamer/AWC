@@ -4,6 +4,7 @@ from Connect_WIFI import do_connect
 from microdot import Microdot, send_file
 from uP_AJ_SR04 import AJ_SR04, Measurements
 from pump_control import PumpControl
+from flow_switch import flowSw
 from messages import texts
 
 Data = {
@@ -16,37 +17,40 @@ Data = {
     "gndTkLevel":75,
     "gndTkVol":4321,
     "gndTkStatus":'Ok',
+    "flowSrStatus":'Ok',
     }
 
 async def main():
     Sensor = AJ_SR04()
-    
+
     await Sensor
-    
+
     Pump = PumpControl(10, 90) # min and max percent limits
-    
+
+    Water = flowSw()
+
     do_connect()
-    
+
     app = Microdot()
-    
+
     msg = texts()
-    
+
     gc.collect()
-    
+
     @app.route('/GUI/<path:path>')
     async def static(request, path):
         if '..' in path:
         # directory traversal is not allowed
             return 'Not found', 404
         return send_file('GUI/' + path, max_age=86400)
-    
+
     @app.route('/getControls')
     async def getC(request):
         return Data
-    
+
     # OLD return sample {"timeOfReading":"08\/06\/2017 16:31:38", "level":"500", 
     # "pump": "false", "pumpMode":"true", "gndtklevel":"2500","errorCode":"0"}
-    
+
     @app.route('/updateControls')
     async def updateC(request):
         requestArgs = request.args
@@ -61,8 +65,7 @@ async def main():
     async def shutdown(request):
         request.app.shutdown()
         return 'The server is shutting down...'
-    
-    
+
     async def sincData(): # Sincronize/transfer all data co-routines
         while True:
             print("Percentage = " + Sensor.measurements.percentage + " %")
@@ -78,21 +81,25 @@ async def main():
             if Pump.mode == 'Completar' and Data["pump"] == 'ON': #Fill Up command
                 Pump.pumpCommand = Data["pump"]
                 Data["pumpMode"] = 'Auto'
-                           
+          
             if Pump.mode == 'Auto':    # Pump command direction
                 Data["pump"] = Pump.pumpCommand
             else:
                 Pump.pumpCommand = Data["pump"]
+
+            Water.pumpCmd = Pump.pumpCommand
             Pump.sensorError = Sensor.err
+            Pump.flowOk = Water.flowOk
 
             Data["pumpStatus"] = msg.pumpMsg[Pump.err]
             Data["headTkStatus"] = msg.sensorMsg[Sensor.err]
-
+            Data["flowSrStatus"] = msg.sensorMsg[Water.err]
+            print("Pump Status = " + msg.pumpMsg[Pump.err])
             await asyncio.sleep_ms(1000)
 
     asyncio.create_task(sincData())
     app.run(debug=True)      
-         
+
 asyncio.run(main())
 
 
