@@ -1,1 +1,0 @@
-﻿[{"timeOfReading":"08\/06\/2017 16:31:38", "level":"500", "updateLevelFast":"true","distance":"0.75", "gndtklevel":"2500", "gndtkdistance":"1.50","errorCode":"0"}]
