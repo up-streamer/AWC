@@ -1,6 +1,7 @@
 import gc
 import network
 import time
+import asyncio
 
 AUTH_OPEN = 0
 AUTH_WEP = 1
@@ -15,7 +16,9 @@ Country_PASSWORD = "RicArd0!2E"
 IoT_SSID = "IoT"
 IoT_PASSWORD = "a1b2c3d4"
 
-def do_connect():
+async def do_connect():
+    ssid = None
+    psw = None
     ap = network.WLAN(network.AP_IF)
     ap.active(False)
 
@@ -36,20 +39,23 @@ def do_connect():
     elif b'SweetCountryHome' in names:
         ssid = Country_SSID
         psw = Country_PASSWORD
-    else:
+    elif  b'IoT' in names:
         ssid = IoT_SSID
         psw = IoT_PASSWORD
 
-    if not wlan.isconnected():
-        print('connecting to network...' + ssid)
-        wlan.connect(ssid, psw)
+    if ssid != None:
+        if not wlan.isconnected():
+            print('connecting to network...' + ssid)
+            wlan.connect(ssid, psw)
+            s=wlan.status()
+            print(s)
 
-    start = time.ticks_ms()  # get millisecond counter
-    while not wlan.isconnected():
-        time.sleep(1)  # sleep for 1 second
-        if time.ticks_ms() - start > 20000:
-            print("connect timeout!")
-            break
+        start = time.ticks_ms()  # get millisecond counter
+        while not wlan.isconnected():
+            await asyncio.sleep(5)
+            print(str(time.ticks_ms() - start))
+            if time.ticks_ms() - start > 20000:
+                print("connect timeout!")
 
     if wlan.isconnected():
         print('network config:', wlan.ifconfig())

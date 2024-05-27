@@ -9,7 +9,7 @@ from messages import texts
 
 Data = {
     "pump":'OFF',
-    "pumpMode":'Auto',   
+    "pumpMode":'Auto',
     "pumpStatus":'Ok',
     "headTklevel":50,
     "headTkVol":1234,
@@ -39,13 +39,11 @@ async def main():
 
     Water = flowSw()
 
-    do_connect()
+    connection = await do_connect()
 
     app = Microdot()
 
     msg = texts()
-
-    gc.collect()
 
     @app.route('/GUI/<path:path>')
     async def static(request, path):
@@ -84,7 +82,7 @@ async def main():
             Data["gndTkVol"] = groundTk.measurements.volume
             Data["headTklevel"] = headTk.measurements.percentage
             Data["headTkVol"] = headTk.measurements.volume
-            Pump.headTkLevel = headTk.measurements.percentage 
+            Pump.headTkLevel = headTk.measurements.percentage
             Pump.mode = Data["pumpMode"]
 
             if Pump.mode == 'Completar' and Data["pump"] == 'ON': #Fill Up command
@@ -106,10 +104,20 @@ async def main():
             Data["flowSrStatus"] = msg.flowMsg[Water.err]
             #print("Pump Status = " + msg.pumpMsg[Pump.err])
             await asyncio.sleep_ms(1000)
+            
+    async def reconnect():
+        while True:
+            await asyncio.sleep(30)
+            if not connection.isconnected():
+                print("Connecting...")
+                await do_connect()
+            
+    asyncio.create_task(reconnect())
 
     asyncio.create_task(sincData())
-    app.run(debug=True)      
-
+    
+    gc.collect()   
+    
+    app.run(debug=True)
+    
 asyncio.run(main())
-
-
