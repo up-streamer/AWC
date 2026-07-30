@@ -24,9 +24,11 @@
     <script type="text/javascript">
         $(document).ready(function () {
 
-            // Initialize widgets;
-            initWidgets();
-            //Starts pump control buttons;
+            // Initialize Widgets
+			initWidgets();
+			// Initialize Gauges
+			onWindowChange(widthSmall);
+            //Starts pump control buttons
             controlPump();
             $('#onOffButton').attr('disabled', true);
             // Update readings and status cyclic at 5000ms
@@ -36,14 +38,24 @@
 </head>
 
 <body>
-
-    <div  id="controls" class="controls">
-        <fieldset>
-            <h2>Controles</h2>
-            <div id="paneldiv">
+        <!-- NavBar -->
+  <nav>
+    <!-- <input type="checkbox" id="menu - toggle"> -->
+    <!-- <label for="menu - toggle" class="menu - icon">&#9776;</label> -->
+    <ul>
+      <li><a href="#"> &emsp;Water Controller</a></li>
+      <li><a href="#">Graph&emsp;</a></li>
+    </ul>
+  </nav>
+         <!-- NavBar -->
+    <div  id="controls" class="controls" >
+        <!-- <fieldset> -->
+		<!-- <legend>Bomba Automatica</legend>  -->
+           <!-- <p class="label"><b>Sistema de Tranferência</b></p>  -->
+            <div id="paneldiv" Class="panel">
                 <div id="groundtkdiv" Class="controlsContainer">
                     <p class="label">Cisterna</p>
-                    <div id="GroundTK" class="vertGaugeContainer">
+                    <div id="GroundTK">
                     </div>
                     <p id="volumeGTK" class="label">---- Lts</p>
                 </div>
@@ -51,23 +63,22 @@
                 <div id="pumpdiv" Class="controlsContainer">
                     <p class="label">Bomba</p>
                     <input type="button" id="manualAutoButton" value="Auto" class="settingLabel" />
-                    <img id="pump" alt="pump" src="Content/images/pumpRound_Off.png"
-                        style="display: block; margin: auto; width:50%;padding-top: 5%;">
+                    <img id="pump" alt="pump" Class= "pumpIcon"src="Content/images/pumpRound_Off.png">
                     <input type="button" id="onOffButton" value="OFF" class="settingLabel" />
                 </div>
                 
                 <div id="headtkdiv" Class="controlsContainer">
                     <p class="label">Caixa D'água</p>
-                    <div id="HeadTK" class="vertGaugeContainer">
+                    <div id="HeadTK">
                     </div>
                     <p id="volumeHTK" class="label">---- Lts</p>
                 </div>
             </div>
-        </fieldset>
+        <!-- </fieldset> -->
     </div>
 
     <!-- Show error messages and infos -->
-    <div id="statusdiv" style="float:left; height:100px; width:100px">
+    <div id="statusdiv" style="float:left; height:100px; width:100px "> 
         <div id="waiting" style="float:left; text-align: center; display: none">
             <br>
             <div class="loader" style="margin: auto"></div>

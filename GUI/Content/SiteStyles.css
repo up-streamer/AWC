@@ -1,12 +1,15 @@
 ﻿body {
     font-family: Verdana, Segoe UI, Helvetica Neue, Trebuchet MS;
-    width: 800px;
-    margin-left: auto;
-    margin-right: auto;   
+    width: 100%;
+    height:100%;
+    margin: 0; 
 }
 
 .label {
     text-align: center;
+	line-height: 0.5;
+	padding:10px;
+	margin:0px;
 }
 
 .messageBox {
@@ -16,26 +19,63 @@
 .settingLabel 
 {
     padding: 5px 5px 5px 5px;
-    display: block;
-    margin: auto;
-    width:50%;
+   width: 100%;
 }
 
 .controlsContainer
 {
-    float: left;
-    height: 300px;
-    width: 250px;
+/*     display: flex;
+    flex-direction: column;
+    align-items: center; */
+    /* flex-basis: 200px  /*add minimum width */
+	
+	display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+ 
 }
 
-.vertGaugeContainer
+.pumpIcon
 {
-    padding: 0em 0 0 6em;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
 }
 
 .controls
 {
+  text-align: center;
     background-image: url("images/backgrnd.jpg");
+
+  /* Apply Border */
+    background-clip: content-box;
+  border: 2px solid royalblue;
+  border-radius: 12px;
+  padding: 5px;
+}
+
+.panel
+{
+	display: flex;
+	justify-content: space-evenly;
+	min-height: 70vh;
+	align-items: center;
+}
+
+/* Change the element direction, headtkdiv on top */
+/* For screen smaller than 650px */
+@media screen and (max-width: 650px) { 
+  .panel {
+	flex-direction: column-reverse;
+  }
+}
+
+@media screen and (min-width: 650px) { 
+  .controlsContainer {
+	flex-basis: 150px; 
+  }
 }
 
 .loader {
@@ -81,3 +121,68 @@
   @keyframes db4-2 {
     100% {top:-0.1px}
   }
+  
+  /* NavBar */
+nav {
+  background-color: #333;
+  /* Apply border */
+  border: 2px solid royalblue;
+  border-radius: 12px;
+}
+ 
+nav ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: space-around;
+  place-items: center;
+  /* justify-content: center; */
+   gap: 30%;
+}
+ 
+nav ul li {
+  padding: 3px;
+}
+ 
+nav ul li a {
+  color: white;
+  text-decoration: none;
+}
+
+/* Selects the firstli element in a list */
+li:nth-of-type(1) {
+  flex-grow: 1; 
+  font: 25px Arial;
+  font-weight: bold;
+}
+.menu -icon {
+  display: none;
+  color: white;
+  font-size: 24px;
+  padding: 3px;
+  cursor: pointer;
+}
+ 
+@media screen and (max-width: 650px) {
+  /* nav ul {
+    /* display: flex; */
+    /* gap: 10%; 
+  } */
+  li:nth-of-type(1) {
+    font: 20px Arial;
+  }
+}
+ 
+  .menu -icon {
+    display: block;
+  }
+ 
+  #menu -toggle:checked~ul {
+    display: flex;
+  }
+
+
+  /* https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_responsive_header */
+
+  /* https://www.tutorialpedia.org/blog/disappearing-navigation-bar-in-html-and-css-responsive/ */
