@@ -6,7 +6,7 @@
 }
 
 .label {
-    text-align: center;
+	text-align: center;
 	line-height: 0.5;
 	padding:10px;
 	margin:0px;
@@ -18,7 +18,7 @@
 
 .settingLabel 
 {
-    padding: 5px 5px 5px 5px;
+   padding: 5px 5px 5px 5px;
    width: 100%;
 }
 
@@ -47,7 +47,7 @@
 .controls
 {
   text-align: center;
-    background-image: url("images/backgrnd.jpg");
+  background-image: url("images/backgrnd.jpg");
 
   /* Apply Border */
     background-clip: content-box;
