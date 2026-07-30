@@ -41,7 +41,6 @@ function updateControls() {
 
     // show the activity widget
     $("#waiting").show();
-    //updateReadings();
     //Send a request to the server, update commands to reflect buttons state.
     $.getJSON("/updateControls", {
         "Pump": $("#onOffButton").val(), 
@@ -194,10 +193,37 @@ function controlPump() {
         updateReadings();
     };
 };
+
+// Variable guage height 
+var gaugeHeight
+
+// Create a MediaQueryList object
+var widthSmall = matchMedia("(max-width: 650px)")
+
+function onWindowChange(widthSmall) {
+  if (widthSmall.matches) { // If media query matches
+    gaugeHeight = Math.floor(window.innerHeight / 5.64); //150
+	//alert("Height small = " + gaugeHeight);
+  } else {
+    gaugeHeight = Math.floor(window.innerHeight / 2.11); //400
+  }
+	gauge.remove(getID('vertGauge1')); 
+	gauge.remove(getID('vertGauge2')); 
+	initGauges(gaugeHeight);
+};
+
+// Attach listener function on state changes
+widthSmall.addEventListener("change", function() {
+  onWindowChange(widthSmall);
+});
+
+// Init Widgets values
+function initGauges (gaugeHeight) {
+    gauge.add(getID('GroundTK'), {width:100, height:gaugeHeight, vertical:true, name: 'vertGauge1', limit: true, gradient: true, scale: 10, colors:['#ff0000','#00ff00'], values:[10,100]});
+    gauge.add(getID('HeadTK'), {width:50, height:gaugeHeight, vertical:true, name: 'vertGauge2', limit: true, gradient: true, scale: 10, colors:['#ff0000','#00ff00'], values:[10,100]});
+};
+
 function initWidgets() {
-    gauge.add(getID('GroundTK'), {width:60, height:200, vertical:true, name: 'vertGauge1', limit: true, gradient: true, scale: 10, colors:['#ff0000','#00ff00'], values:[10,100]});
-    gauge.add(getID('HeadTK'), {width:60, height:200, vertical:true, name: 'vertGauge2', limit: true, gradient: true, scale: 10, colors:['#ff0000','#00ff00'], values:[10,100]}); 
-    // Init Widget values
     statusFault = false
     faultstatus = true
     unitsVol = false
