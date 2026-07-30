@@ -1,0 +1,1 @@
+[{"gndTkLevel":"0.0","pump":"ON","pumpMode":"Manual","headTkVol":"0.0","headTklevel":"0.0","gndTkStatus":"Falha de leitura (CRC)","gndTkVol":"0.0","flowSrStatus":"Ok","headTkStatus":"Falha de leitura (CRC)","pumpStatus":"Cuidado! Bomba em manual, sem proteção"}]

@@ -41,9 +41,12 @@ class AJ_SR04:
         while True:
             await asyncio.sleep_ms(sampleInterval)
             self.distance = await self._updDistance()
-            self.measurements.__updMeasurements(self.distance)
-            if self.err == 0: # Error msg priority sensor error > measurements error
-                self.err = self.measurements.err
+            if self.distance != None:
+                self.measurements.__updMeasurements(self.distance)
+                if self.err == 0: # Error msg priority sensor error > measurements error
+                    self.err = self.measurements.err
+            else:
+                yield from asyncio.sleep(0)
                     
     async def _updDistance(self):
         self.uart.write(b'\x01')
@@ -93,19 +96,23 @@ class Measurements:
             self.err = 3 # distance values reverse
             
         def calc(dist):
-            if self.err == 0:
+            print(" dist is = ..." + str(dist))
+            print(self.err)
+            if (self.err == 0) and (dist != None):
                 if (dist < (self.max_distance + self.tolerance)) and (dist > (self.min_distance - self.tolerance)): # Good reading
                     level = self.max_distance - dist
-                    self.err == 0
+                    #self.err == 0
                     self._lastGoodlevel = level
                     return level
                 else:
                     self.err = 4  # Out of tolerance
                     return self._lastGoodlevel
             else:
+                self.err = 2 # No echo, sensor disconnected
+                print(self.err)
                 return self._lastGoodlevel
                 
-        self.err = 0
+        #self.err = 0
         self.level = calc(distance)
         
         proportion = (self.level / self.max_level ) 
