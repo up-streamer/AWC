@@ -21,6 +21,10 @@ Data = {
     }
 
 async def main():
+    connection = await do_connect()
+
+    app = Microdot()
+    
     headTk = AJ_SR04(COM = 2, sampleInterval = 1000)
     headTk.max_distance = 974
     headTk.min_distance = 250
@@ -39,9 +43,7 @@ async def main():
 
     Water = flowSw()
 
-    connection = await do_connect()
-
-    app = Microdot()
+    #do_connect was here, after tanks readings cause it to slow start
 
     msg = texts()
 

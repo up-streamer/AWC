@@ -11,7 +11,7 @@ AUTH_WPA_WPA2_PSK = 4
 
 City_SSID = "Ricardo "
 City_PASSWORD = "a1b2c3d4"
-Country_SSID = "SweetCountryHome"
+Country_SSID = "SweetHome"
 Country_PASSWORD = "RicArd0!2E"
 IoT_SSID = "IoT"
 IoT_PASSWORD = "a1b2c3d4"
@@ -36,7 +36,7 @@ async def do_connect():
     if b'Ricardo ' in names:
         ssid = City_SSID
         psw = City_PASSWORD
-    elif b'SweetCountryHome' in names:
+    elif b'SweetHome' in names:
         ssid = Country_SSID
         psw = Country_PASSWORD
     elif  b'IoT' in names:
