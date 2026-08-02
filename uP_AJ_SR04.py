@@ -7,6 +7,7 @@ from machine import Pin
 from machine import UART
 from time import sleep_ms
 from micropython import const
+from collections import deque
 import asyncio
 
 _PAUSE_MS = const(400)  # AJ-SR04M Acquisition delay
@@ -88,6 +89,9 @@ class Measurements:
         self.max_level = self.max_distance - self.min_distance
         self.tolerance = (self.max_distance - self.min_distance) * 0.05
         self._lastGoodlevel = 0
+        self.max_len = 10
+        self.deck = deque((), self.max_len) #Rolling average double end queue
+        self.err = 0
           
     def __updMeasurements(self, distance):
         if self.max_distance > self.min_distance:
@@ -118,4 +122,13 @@ class Measurements:
         proportion = (self.level / self.max_level ) 
         self.percentage = '{:.1f}'.format(proportion * 100)
         self.volume = '{:.1f}'.format(proportion * self.max_volume)
+        
+    # Rolling Average #
+    def __average(self, dist):
+        self.deck.append(dist)
+        average = round((sum(self.deck) / len(self.deck)))
+        #self.deck.append(average)
+        print(" Dist is = ..." + str(dist))
+        print(" Average is = ..." + str(average))
+        return average
         
