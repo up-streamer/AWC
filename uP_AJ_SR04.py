@@ -39,15 +39,15 @@ class AJ_SR04:
             sampleInterval = 0
         else:
             sampleInterval = sampleInterval - _PAUSE_MS
+            
         while True:
             await asyncio.sleep_ms(sampleInterval)
             self.distance = await self._updDistance()
             if self.distance != None:
-                self.measurements.__updMeasurements(self.distance)
+                self.measurements.__updMeasurements (self.measurements.__average(self.distance))
                 if self.err == 0: # Error msg priority sensor error > measurements error
                     self.err = self.measurements.err
-            else:
-                yield from asyncio.sleep(0)
+            self.measurements.err
                     
     async def _updDistance(self):
         self.uart.write(b'\x01')
@@ -76,7 +76,6 @@ class AJ_SR04:
         else:
             self.err = 1 # Data Check error, CRC fail
             return self._lastGoodDistance
-            #raise OSError('Sensor Failed')
                     
 class Measurements:
     def __init__(self, max_distance, min_distance, max_volume):
@@ -94,29 +93,19 @@ class Measurements:
         self.err = 0
           
     def __updMeasurements(self, distance):
-        if self.max_distance > self.min_distance:
-            self.err = 0
-        else:
-            self.err = 3 # distance values reverse
-            
+        
         def calc(dist):
-            print(" dist is = ..." + str(dist))
-            print(self.err)
-            if (self.err == 0) and (dist != None):
+            if (self.err == 0):
                 if (dist < (self.max_distance + self.tolerance)) and (dist > (self.min_distance - self.tolerance)): # Good reading
                     level = self.max_distance - dist
-                    #self.err == 0
                     self._lastGoodlevel = level
                     return level
                 else:
                     self.err = 4  # Out of tolerance
                     return self._lastGoodlevel
             else:
-                self.err = 2 # No echo, sensor disconnected
-                print(self.err)
                 return self._lastGoodlevel
                 
-        #self.err = 0
         self.level = calc(distance)
         
         proportion = (self.level / self.max_level ) 
