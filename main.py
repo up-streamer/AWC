@@ -24,26 +24,28 @@ async def main():
     connection = await do_connect()
 
     app = Microdot()
-    
+
     headTk = AJ_SR04(COM = 2, sampleInterval = 1000)
     headTk.max_distance = 974
     headTk.min_distance = 250
     headTk.max_volume = 1000
     headTk.start()
     await headTk
-
+ 
     groundTk = AJ_SR04(COM = 1, sampleInterval = 5000)
     groundTk.max_distance = 974
     groundTk.min_distance = 250
     groundTk.max_volume = 10000
     groundTk.start()
     await groundTk
-    
-    Pump = PumpControl(10, 90) # min and max percent limits
 
     Water = flowSw()
+    Water.start()
 
-    #do_connect was here, after tanks readings cause it to slow start
+    Pump = PumpControl()
+    Pump.startPerct = 10 # min and max percent limits
+    Pump.stopPerct = 90
+    Pump.start() ### Try for compatibility
 
     msg = texts()
 
@@ -56,6 +58,26 @@ async def main():
 
     @app.route('/getControls')
     async def getC(request):
+        # print("Percentage = " + headTk.measurements.percentage + " %")
+        # print("Volume = " + headTk.measurements.volume + " Lts")
+        # print("Tank Level = " + str(headTk.measurements.level) + " mm")
+        # print("Tank Error Code = " + str(headTk.err))
+        # print("")
+        Data["gndTkLevel"] = groundTk.measurements.percentage
+        Data["gndTkVol"] = groundTk.measurements.volume
+        Data["headTklevel"] = headTk.measurements.percentage
+        Data["headTkVol"] = headTk.measurements.volume
+
+        Data["headTkStatus"] = msg.tankMsg[headTk.err]
+        Data["gndTkStatus"] = msg.tankMsg[groundTk.err]
+        Data["flowSrStatus"] = msg.flowMsg[Water.err]
+        Data["pumpStatus"] = msg.pumpMsg[Pump.err]
+        
+        if Pump.mode != 'Completar':
+            Data["pump"] = Pump.pumpCommand
+            Data["pumpMode"] = Pump.mode
+        # print("Pump Status = " + msg.pumpMsg[Pump.err])
+
         return Data
 
     @app.route('/updateControls')
@@ -63,63 +85,54 @@ async def main():
         requestArgs = request.args
         Data["pumpMode"] = requestArgs['PumpMode']
         Data["pump"] = requestArgs['Pump']
-        #print(" the pump mode is..." + Data["pumpMode"])
-        #print("and pump is... " + Data["pump"])
+        # print(" the pump mode is..." + Data["pumpMode"])
+        # print("and pump is... " + Data["pump"])
+        #   Pump.pumpCommand = 'ON' # Done in Pump
+        #   Data["pumpMode"] = 'Auto'
+        if Data["pumpMode"] == 'Manual':    # May be redundant, test removing it
+            Pump.mode = 'Manual'
+            Pump.pumpCommand = Data["pump"] #   
+        elif Data["pumpMode"] == 'Completar':
+            Pump.mode = 'Completar'
+            Pump.pumpCommand = Data["pump"]
+        else:
+            Pump.pumpCommand = 'OFF'
+            Pump.mode = Data["pumpMode"]
+ 
         print(requestArgs)
         return "Success!"
-
+    # To be implemented on GUI and test
     @app.route('/shutdown')
     async def shutdown(request):
         request.app.shutdown()
         return 'The server is shutting down...'
 
+    ### Separate the variable that really need to be in loop. Others put in updateC or a call from it
     async def sincData(): # Sincronize/transfer all data co-routines
         while True:
-            #print("Percentage = " + headTk.measurements.percentage + " %")
-            #print("Volume = " + headTk.measurements.volume + " Lts")
-            #print("Tank Level = " + str(headTk.measurements.level) + " mm")
-            #print("Tank Error Code = " + str(headTk.err))
-            #print("")
-            Data["gndTkLevel"] = groundTk.measurements.percentage
-            Data["gndTkVol"] = groundTk.measurements.volume
-            Data["headTklevel"] = headTk.measurements.percentage
-            Data["headTkVol"] = headTk.measurements.volume
+
             Pump.headTkLevel = headTk.measurements.percentage
-            Pump.mode = Data["pumpMode"]
-
-            if Pump.mode == 'Completar' and Data["pump"] == 'ON': #Fill Up command
-                Pump.pumpCommand = Data["pump"]
-                Data["pumpMode"] = 'Auto'
-          
-            if Pump.mode == 'Auto':    # Pump command direction
-                Data["pump"] = Pump.pumpCommand
-            else:
-                Pump.pumpCommand = Data["pump"]
-
+            #Pump.mode = Data["pumpMode"] # May be redundant...
             Water.pumpCmd = Pump.pumpCommand
             Pump.headTkErr = headTk.err
-            Pump.flowOk = Water.flowOk
+            Pump.flowOk = Water.err
 
-            Data["pumpStatus"] = msg.pumpMsg[Pump.err]
-            Data["headTkStatus"] = msg.tankMsg[headTk.err]
-            Data["gndTkStatus"] = msg.tankMsg[groundTk.err]
-            Data["flowSrStatus"] = msg.flowMsg[Water.err]
-            #print("Pump Status = " + msg.pumpMsg[Pump.err])
-            await asyncio.sleep_ms(1000)
-            
+            await asyncio.sleep_ms(500) #was 1000
+
     async def reconnect():
         while True:
             await asyncio.sleep(30)
             if not connection.isconnected():
                 print("Connecting...")
                 await do_connect()
-            
+
     asyncio.create_task(reconnect())
 
+    # Moved sincData to above pumpcontrol
     asyncio.create_task(sincData())
-    
-    gc.collect()   
-    
+
+    gc.collect()
+
     app.run(debug=True)
-    
+
 asyncio.run(main())
