@@ -9,8 +9,8 @@ AUTH_WPA_PSK = 2
 AUTH_WPA2_PSK = 3
 AUTH_WPA_WPA2_PSK = 4
 
-City_SSID = "Ricardo "
-City_PASSWORD = "a1b2c3d4"
+Tether_SSID = "CalibreShare"
+Tether_PASSWORD = "CalibSha"
 Country_SSID = "SweetHome"
 Country_PASSWORD = "RicArd0!2E"
 IoT_SSID = "IoT"
@@ -33,9 +33,9 @@ async def do_connect():
     for name in names:
         print(name)
 
-    if b'Ricardo ' in names:
-        ssid = City_SSID
-        psw = City_PASSWORD
+    if b'CalibreShare' in names:
+        ssid = Tether_SSID
+        psw = Tether_PASSWORD
     elif b'SweetHome' in names:
         ssid = Country_SSID
         psw = Country_PASSWORD
