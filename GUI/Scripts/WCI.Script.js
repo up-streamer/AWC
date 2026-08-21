@@ -125,11 +125,7 @@ function pumpAnimation() {
 				$('#pump').fadeTo(100, 0.3, function () { $(this).attr("src", "Content/images/pumpRound_On.png").fadeTo(500, 1.00); });
 			}				
         } else {
-			if (statusFault && ($("#manualAutoButton").val() == "Auto")) {
-				$('#pump').fadeTo(100, 0.3, function () { $(this).attr("src", "Content/images/pumpRound_Warn.png").fadeTo(500, 1.00); });
-			} else {
-				$('#pump').fadeTo(100, 0.3, function () { $(this).attr("src", "Content/images/pumpRound_Off.png").fadeTo(100, 1.00); });
-			}			
+            $('#pump').fadeTo(100, 0.3, function () { $(this).attr("src", "Content/images/pumpRound_Off.png").fadeTo(100, 1.00); });
         };
     };
 };
@@ -153,6 +149,7 @@ function controlPump() {
     $('#manualAutoButton').click(function () {
         if ($('#manualAutoButton').val() == 'Manual') {
             $('#manualAutoButton').val('Auto');
+            $('#onOffButton').val('OFF');
             $('#onOffButton').attr('disabled', true);
         } else if ($('#manualAutoButton').val() == 'Auto'){
             $('#manualAutoButton').val('Manual');
