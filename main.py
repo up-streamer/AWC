@@ -88,6 +88,7 @@ async def main():
 
         print(requestArgs)
         return "Success!"
+    
     # To be implemented on GUI and test
     @app.route('/shutdown')
     async def shutdown(request):
