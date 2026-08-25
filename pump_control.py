@@ -22,10 +22,6 @@ class PumpControl:
     def start(self):
         asyncio.create_task(self._run(self.sampleInterval))
 
-#     def __iter__(self):  # Await 1st reading
-#         await asyncio.sleep_ms(5000) ### New attempt to add __iter__
-#         yield from asyncio.sleep(0)
-
     def _pumpSwitch(self, sw):
         if sw:
             self.pump.on()
@@ -95,7 +91,7 @@ class PumpControl:
             if (self.mode == 'Completar') and (self.pumpCommand == 'ON'): # Hack, necessary to activate pump in 'Completar'
                 self.mode = 'Auto'
                 self._pumpSwitch(ON)
-                for delay in range (10):
+                for delay in range (10):    ###  Not necessary... test it
                     if not (self.mode == 'Manual'):
                         await asyncio.sleep_ms(sampleInterval)
 

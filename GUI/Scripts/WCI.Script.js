@@ -11,7 +11,6 @@ function getControls() {
 
     // show the activity widget
     $("#waiting").show();
-
     /* "http://123.456.789.000/getControls" */
     var hostName = window.location.hostName
     var jsonURL = "/getControls"
@@ -40,7 +39,7 @@ function getControls() {
 function updateControls() {
 
     // show the activity widget
-    $("#waiting").show();
+    //$("#waiting").show();
     //Send a request to the server, update commands to reflect buttons state.
     $.getJSON("/updateControls", {
         "Pump": $("#onOffButton").val(), 
@@ -51,7 +50,7 @@ function updateControls() {
 
     }, function (j) {
         // hide the activity widget
-        $("#waiting").fadeOut("slow");
+        //$("#waiting").fadeOut("slow");
     });
 }
 
@@ -129,7 +128,7 @@ function pumpAnimation() {
 				$('#pump').fadeTo(100, 0.3, function () { $(this).attr("src", "Content/images/pumpRound_Warn.png").fadeTo(500, 1.00); });
 			} else {
 				$('#pump').fadeTo(100, 0.3, function () { $(this).attr("src", "Content/images/pumpRound_On.png").fadeTo(500, 1.00); });
-			}				
+			}
         } else {
             $('#pump').fadeTo(100, 0.3, function () { $(this).attr("src", "Content/images/pumpRound_Off.png").fadeTo(100, 1.00); });
         };
@@ -187,10 +186,10 @@ function controlPump() {
     });
 
     function buttonChange() {
-        updateControls();
+        txMode = true
         pumpAnimation();  
     }
-    
+
     function toggleUnits() {
         unitsVol = !unitsVol
         updateReadings();
@@ -236,11 +235,22 @@ function initWidgets() {
     headTkStatus = 'Ok'
     gndTkStatus = 'Ok'
     flowSrStatus = 'Ok'
+
+	txMode = false
+};
+
+function txRxMode() {
+     if (txMode){
+        updateControls()
+        txMode = false
+      } else {
+        getControls()
+      }
 };
 
 // Set sample interval
 function getControlsInterval() {
     setInterval(
-        'getControls()'
+        'txRxMode()'
     , 2000);
     };

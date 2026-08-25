@@ -31,7 +31,6 @@ async def main():
     headTk.max_volume = 1000
     headTk.start()
     await headTk
- 
     groundTk = AJ_SR04(COM = 1, sampleInterval = 5000)
     groundTk.max_distance = 974
     groundTk.min_distance = 250
@@ -72,33 +71,21 @@ async def main():
         Data["gndTkStatus"] = msg.tankMsg[groundTk.err]
         Data["flowSrStatus"] = msg.flowMsg[Water.err]
         Data["pumpStatus"] = msg.pumpMsg[Pump.err]
-        
-        if Pump.mode != 'Completar':
-            Data["pump"] = Pump.pumpCommand
-            Data["pumpMode"] = Pump.mode
-        # print("Pump Status = " + msg.pumpMsg[Pump.err])
+
+        Data["pump"] = Pump.pumpCommand
+        Data["pumpMode"] = Pump.mode
 
         return Data
 
     @app.route('/updateControls')
     async def updateC(request):
         requestArgs = request.args
-        Data["pumpMode"] = requestArgs['PumpMode']
+        Pump.mode = Data["pumpMode"] = requestArgs['PumpMode']
         Data["pump"] = requestArgs['Pump']
-        # print(" the pump mode is..." + Data["pumpMode"])
-        # print("and pump is... " + Data["pump"])
-        #   Pump.pumpCommand = 'ON' # Done in Pump
-        #   Data["pumpMode"] = 'Auto'
-        if Data["pumpMode"] == 'Manual':    # May be redundant, test removing it
-            Pump.mode = 'Manual'
-            Pump.pumpCommand = Data["pump"] #   
-        elif Data["pumpMode"] == 'Completar':
-            Pump.mode = 'Completar'
+        
+        if (Pump.mode == 'Manual') or (Pump.mode == 'Completar'):
             Pump.pumpCommand = Data["pump"]
-        else:
-            Pump.pumpCommand = 'OFF'
-            Pump.mode = Data["pumpMode"]
- 
+
         print(requestArgs)
         return "Success!"
     # To be implemented on GUI and test
@@ -107,12 +94,9 @@ async def main():
         request.app.shutdown()
         return 'The server is shutting down...'
 
-    ### Separate the variable that really need to be in loop. Others put in updateC or a call from it
     async def sincData(): # Sincronize/transfer all data co-routines
         while True:
-
             Pump.headTkLevel = headTk.measurements.percentage
-            #Pump.mode = Data["pumpMode"] # May be redundant...
             Water.pumpCmd = Pump.pumpCommand
             Pump.headTkErr = headTk.err
             Pump.flowOk = Water.err
@@ -128,7 +112,6 @@ async def main():
 
     asyncio.create_task(reconnect())
 
-    # Moved sincData to above pumpcontrol
     asyncio.create_task(sincData())
 
     gc.collect()
