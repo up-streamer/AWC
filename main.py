@@ -57,11 +57,6 @@ async def main():
 
     @app.route('/getControls')
     async def getC(request):
-        # print("Percentage = " + headTk.measurements.percentage + " %")
-        # print("Volume = " + headTk.measurements.volume + " Lts")
-        # print("Tank Level = " + str(headTk.measurements.level) + " mm")
-        # print("Tank Error Code = " + str(headTk.err))
-        # print("")
         Data["gndTkLevel"] = groundTk.measurements.percentage
         Data["gndTkVol"] = groundTk.measurements.volume
         Data["headTklevel"] = headTk.measurements.percentage
@@ -102,7 +97,7 @@ async def main():
             Pump.headTkErr = headTk.err
             Pump.flowOk = Water.err
 
-            await asyncio.sleep_ms(500) #was 1000
+            await asyncio.sleep_ms(500)
 
     async def reconnect():
         while True:

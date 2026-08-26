@@ -3,7 +3,7 @@ from machine import Pin
 from time import sleep_ms
 
 class flowSw:
-    def __init__(self, sampleInterval = 5000): # was 10000
+    def __init__(self, sampleInterval = 5000):
         self.pumpCmd = 'OFF'
         self.err = 0
         self.sampleInterval = sampleInterval
@@ -28,9 +28,7 @@ class flowSw:
                 _notFlowSw = not (_flowSw1st + self.flowSw.value())
                 if _notFlowSw and self.pumpCmd == 'OFF': # Check pump is still OFF?
                     self.err = 0
-                elif (not _notFlowSw) and self.pumpCmd == 'OFF': ### To cover other possibilites...
-                    self.err = 2 # Flow sensor fault            ### Pump turned on during await 
+                elif (not _notFlowSw) and self.pumpCmd == 'OFF': # To cover other possibilites...
+                    self.err = 2 # Flow sensor fault             # pump turned ON during await 
 
-            print("Flow Switch = " + str(_flowSw))
-            print("  Flow Error = " + str(self.err))
         

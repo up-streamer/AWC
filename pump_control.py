@@ -29,12 +29,13 @@ class PumpControl:
         else:
             self.pump.off()
             self.pumpCommand = 'OFF'
-
+            
+    # Retry to start
     async def _retry(self, sampleInterval):
-        self.err = 2 #Retry
+        self.err = 2
         self._pumpSwitch(OFF)
         for attempt in range(3):
-            for delay in range (10): #Was 15
+            for delay in range (10):
                 if self.mode == 'Auto' and not self.headTkErr:
                     await asyncio.sleep_ms(sampleInterval)
                 else:
@@ -42,7 +43,7 @@ class PumpControl:
 
             self._pumpSwitch(ON)
 
-            for delay in range (10):  #Was 30
+            for delay in range (10):
                 if self.mode == 'Auto' and not self.headTkErr:
                     await asyncio.sleep_ms(sampleInterval)
                 else:
@@ -88,12 +89,9 @@ class PumpControl:
                         self._pumpSwitch(OFF)
 
             # Out of Auto mode #
-            if (self.mode == 'Completar') and (self.pumpCommand == 'ON'): # Hack, necessary to activate pump in 'Completar'
+            if (self.mode == 'Completar') and (self.pumpCommand == 'ON'): # Activate pump in 'Completar' mode
                 self.mode = 'Auto'
                 self._pumpSwitch(ON)
-                for delay in range (10):    ###  Not necessary... test it
-                    if not (self.mode == 'Manual'):
-                        await asyncio.sleep_ms(sampleInterval)
 
             if self.mode == 'Manual':
                 if self.pumpCommand == 'OFF':
@@ -101,6 +99,6 @@ class PumpControl:
                     self.err = 0 # Cleared errors.
                 if self.pumpCommand == 'ON':
                     self.pump.on() 
-                    self.err = 1 # Caution msg Pump running in manual mode
+                    self.err = 1 # Caution msg
 
             await asyncio.sleep_ms(sampleInterval)
