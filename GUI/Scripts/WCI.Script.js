@@ -221,7 +221,7 @@ widthSmall.addEventListener("change", function() {
 
 // Init Widgets values
 function initGauges (gaugeHeight) {
-    gauge.add(getID('GroundTK'), {width:100, height:gaugeHeight, vertical:true, name: 'vertGauge1', limit: true, gradient: true, scale: 10, colors:['#ff0000','#00ff00'], values:[10,100]});
+    gauge.add(getID('GroundTK'), {width:50, height:gaugeHeight, radius:0.5, vertical:true, name: 'vertGauge1', limit: true, gradient: true, scale: 10, colors:['#ff0000','#00ff00'], values:[10,100]});
     gauge.add(getID('HeadTK'), {width:50, height:gaugeHeight, vertical:true, name: 'vertGauge2', limit: true, gradient: true, scale: 10, colors:['#ff0000','#00ff00'], values:[10,100]});
 };
 
