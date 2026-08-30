@@ -51,6 +51,9 @@ function updateControls() {
     }, function (j) {
         // hide the activity widget
         //$("#waiting").fadeOut("slow");
+    })
+    .always(function() {
+        txMode = false;
     });
 }
 
@@ -92,18 +95,19 @@ function updateReadings() {
 };
 
 // Buttons settings
-var manualAutoButtonSettings = {
+/* var manualAutoButtonSettings = {
     onLabel: 'Auto',
     offLabel: 'Manual',
     height: 27,
     width: 120,
     checked: 'true',
-};
+}; */
 
 function pumpAnimation() {
     if ((onOffButton != $('#onOffButton').val()) || (TKstatusFault != TKfaultStatus)) {
         animateGaugeOnFault();
         animatePump();
+        animateButton();
         onOffButton = $('#onOffButton').val(); 
     }
 
@@ -132,6 +136,14 @@ function pumpAnimation() {
         } else {
             $('#pump').fadeTo(100, 0.3, function () { $(this).attr("src", "Content/images/pumpRound_Off.png").fadeTo(100, 1.00); });
         };
+    };
+
+    function animateButton() {
+        if($("#manualAutoButton").val() == 'Manual'){
+            $("#onOffButton").attr('disabled', false);
+        } else {
+            $("#onOffButton").attr('disabled', true);
+        }
     };
 };
 
@@ -186,8 +198,8 @@ function controlPump() {
     });
 
     function buttonChange() {
+        pumpAnimation(); 
         txMode = true
-        pumpAnimation();  
     }
 
     function toggleUnits() {
@@ -235,6 +247,14 @@ function initWidgets() {
     headTkStatus = 'Ok'
     gndTkStatus = 'Ok'
     flowSrStatus = 'Ok'
+    $('#onOffButton').attr('disabled', true);
+    var manualAutoButtonSettings = {
+        onLabel: 'Auto',
+        offLabel: 'Manual',
+        height: 27,
+        width: 120,
+        checked: 'true',
+    };
 
 	txMode = false
 };
@@ -242,7 +262,6 @@ function initWidgets() {
 function txRxMode() {
      if (txMode){
         updateControls()
-        txMode = false
       } else {
         getControls()
       }
