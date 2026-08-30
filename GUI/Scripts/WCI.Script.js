@@ -94,15 +94,6 @@ function updateReadings() {
     pumpAnimation();
 };
 
-// Buttons settings
-/* var manualAutoButtonSettings = {
-    onLabel: 'Auto',
-    offLabel: 'Manual',
-    height: 27,
-    width: 120,
-    checked: 'true',
-}; */
-
 function pumpAnimation() {
     if ((onOffButton != $('#onOffButton').val()) || (TKstatusFault != TKfaultStatus)) {
         animateGaugeOnFault();
