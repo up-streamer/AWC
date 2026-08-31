@@ -19,8 +19,8 @@ function getControls() {
     $.getJSON(jsonURL, "", function (j) {
         // walk the responses and transfer it to objects. ErroCode Key is for future use
         // headTklevel and gndtklevel range 0 to 100
-        $("#onOffButton").val(j.pump);
-        $("#manualAutoButton").val(j.pumpMode);
+        pump = j.pump;
+        pumpMode = j.pumpMode;
         pumpStatus = j.pumpStatus;
         headTklevel = j.headTklevel;
         headTkVol = j.headTkVol;
@@ -59,6 +59,10 @@ function updateControls() {
 
 // Control Panel
 function updateReadings() {
+    if (!txMode){
+        $("#onOffButton").val(pump);
+        $("#manualAutoButton").val(pumpMode);
+    }
     gauge.modify(getID('vertGauge1'), {values:[gndTkLevel,100]});
     gauge.modify(getID('vertGauge2'), {values:[headTklevel,100]});
     

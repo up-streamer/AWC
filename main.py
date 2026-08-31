@@ -31,6 +31,7 @@ async def main():
     headTk.max_volume = 1000
     headTk.start()
     await headTk
+    
     groundTk = AJ_SR04(COM = 1, sampleInterval = 5000)
     groundTk.max_distance = 974
     groundTk.min_distance = 250
@@ -44,7 +45,7 @@ async def main():
     Pump = PumpControl()
     Pump.startPerct = 10 # min and max percent limits
     Pump.stopPerct = 90
-    Pump.start() ### Try for compatibility
+    Pump.start()
 
     msg = texts()
 
