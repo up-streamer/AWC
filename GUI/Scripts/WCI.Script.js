@@ -239,14 +239,6 @@ function initWidgets() {
     gndTkStatus = 'Ok'
     flowSrStatus = 'Ok'
     $('#onOffButton').attr('disabled', true);
-    var manualAutoButtonSettings = {
-        onLabel: 'Auto',
-        offLabel: 'Manual',
-        height: 27,
-        width: 120,
-        checked: 'true',
-    };
-
 	txMode = false
 };
 
