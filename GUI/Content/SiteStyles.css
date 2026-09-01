@@ -53,22 +53,8 @@
 {
 	display: flex;
 	justify-content: space-evenly;
-	min-height: 70vh;
+	min-height: 60vh;
 	align-items: center;
-}
-
-/* Change the element direction, headtkdiv on top */
-/* For screen smaller than 650px */
-@media screen and (max-width: 650px) { 
-  .panel {
-	flex-direction: column-reverse;
-  }
-}
-
-@media screen and (min-width: 650px) { 
-  .controlsContainer {
-	flex-basis: 150px; 
-  }
 }
 
 .loader {
@@ -158,10 +144,6 @@ li:nth-of-type(1) {
 }
  
 @media screen and (max-width: 650px) {
-  /* nav ul {
-    /* display: flex; */
-    /* gap: 10%; 
-  } */
   li:nth-of-type(1) {
     font: 20px Arial;
   }

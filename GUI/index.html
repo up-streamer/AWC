@@ -39,8 +39,6 @@
 <body>
         <!-- NavBar -->
   <nav>
-    <!-- <input type="checkbox" id="menu - toggle"> -->
-    <!-- <label for="menu - toggle" class="menu - icon">&#9776;</label> -->
     <ul>
       <li><a href="#"> &emsp;Water Controller</a></li>
       <li><a href="#">Graph&emsp;</a></li>
@@ -48,46 +46,42 @@
   </nav>
          <!-- NavBar -->
     <div  id="controls" class="controls" >
-        <!-- <fieldset> -->
-		<!-- <legend>Bomba Automatica</legend>  -->
-           <!-- <p class="label"><b>Sistema de Tranferência</b></p>  -->
-            <div id="paneldiv" Class="panel">
-                <div id="groundtkdiv" Class="controlsContainer">
+            <div id="paneldiv" class="panel">
+                <div id="groundtkdiv" class="controlsContainer">
                     <p class="label">Cisterna</p>
                     <div id="GroundTK">
                     </div>
                     <p id="volumeGTK" class="label">---- Lts</p>
                 </div>
                 
-                <div id="pumpdiv" Class="controlsContainer">
+                <div id="pumpdiv" class="controlsContainer">
                     <p class="label">Bomba</p>
                     <input type="button" id="manualAutoButton" value="Auto" class="settingLabel" />
-                    <img id="pump" alt="pump" Class= "pumpIcon"src="Content/images/pumpRound_Off.png">
+                    <img id="pump" alt="pump" class= "pumpIcon"src="Content/images/pumpRound_Off.png">
                     <input type="button" id="onOffButton" value="OFF" class="settingLabel" />
+
+                    <div id="spinnerdiv" style="margin-top: 10px; height:40px; width:60px "> 
+                        <div id="waiting" style="display: none">
+                            <br>
+                            <div class="loader" style="margin: auto"></div>
+                        </div>
+                    </div>
+
                 </div>
                 
-                <div id="headtkdiv" Class="controlsContainer">
+                <div id="headtkdiv" class="controlsContainer">
                     <p class="label">Caixa D'água</p>
                     <div id="HeadTK">
                     </div>
                     <p id="volumeHTK" class="label">---- Lts</p>
                 </div>
             </div>
-        <!-- </fieldset> -->
+            <!-- Show error messages and infos -->
+            <div id="statustextdiv" style="height:120px; margin: 10px ;">
+                <p class="messageBox">Status:</p>
+                <p id="statustext" class="messageBox"></p>
+            </div>
     </div>
-
-    <!-- Show error messages and infos -->
-    <div id="statusdiv" style="float:left; height:100px; width:60px "> 
-        <div id="waiting" style="float:center; text-align: center; display: none">
-            <br>
-            <div class="loader" style="margin: auto"></div>
-        </div>
-    </div>
-
-    <div id="statustextdiv">
-        <p id="statustext" class="messageBox"></p>
-    </div>
-
 </body>
 
 </html>

@@ -70,6 +70,9 @@ function updateReadings() {
         statusFault = false;
 		$("#statustext").fadeOut("slow");
 		$("#statustext").empty();
+        $("#statustext").append("Ok");
+        $("#statustext").fadeIn("slow");
+
     }
 
     if (unitsVol){
@@ -194,13 +197,8 @@ var gaugeHeight
 // Create a MediaQueryList object
 var widthSmall = matchMedia("(max-width: 650px)")
 
-function onWindowChange(widthSmall) {
-  if (widthSmall.matches) { // If media query matches
-    gaugeHeight = Math.floor(window.innerHeight / 5.64); //150
-	//alert("Height small = " + gaugeHeight);
-  } else {
-    gaugeHeight = Math.floor(window.innerHeight / 2.11); //400
-  }
+function onWindowChange() {
+    gaugeHeight = Math.floor(window.innerHeight / 1.87); //450
 	gauge.remove(getID('vertGauge1')); 
 	gauge.remove(getID('vertGauge2')); 
 	initGauges(gaugeHeight);
@@ -208,7 +206,7 @@ function onWindowChange(widthSmall) {
 
 // Attach listener function on state changes
 widthSmall.addEventListener("change", function() {
-  onWindowChange(widthSmall);
+  onWindowChange();
 });
 
 // Init Widgets values
