@@ -5,20 +5,11 @@ function getID (obj) {
 
 // send a request to the server to get the current levels and buttons state
 function getControls() {
-    // Json object expected
-    /*   [{"timeOfReading":"08\/06\/2017 16:31:38", "level":"500", 
-      "pump": "false", "pumpMode":"true", "gndtklevel":"2500","errorCode":"0"}] */
-
     // show the activity widget
     $("#waiting").show();
-    /* "http://123.456.789.000/getControls" */
-    var hostName = window.location.hostName
-    var jsonURL = "/getControls"
-    //alert("jsonURL = " + jsonURL);
 
-    $.getJSON(jsonURL, "", function (j) {
-        // walk the responses and transfer it to objects. ErroCode Key is for future use
-        // headTklevel and gndtklevel range 0 to 100
+    $.getJSON("/getControls", "", function (j) {
+        // walk the responses and transfer it to objects.
         pump = j.pump;
         pumpMode = j.pumpMode;
         pumpStatus = j.pumpStatus;
@@ -37,10 +28,6 @@ function getControls() {
 }
 
 function updateControls() {
-
-    // show the activity widget
-    //$("#waiting").show();
-    //Send a request to the server, update commands to reflect buttons state.
     $.getJSON("/updateControls", {
         "Pump": $("#onOffButton").val(), 
         "PumpMode": $("#manualAutoButton").val()
@@ -48,9 +35,6 @@ function updateControls() {
         //Reset: resetController,                 // For future use
         // Restart: restartController,             // For future use
 
-    }, function (j) {
-        // hide the activity widget
-        //$("#waiting").fadeOut("slow");
     })
     .always(function() {
         txMode = false;
@@ -63,6 +47,7 @@ function updateReadings() {
         $("#onOffButton").val(pump);
         $("#manualAutoButton").val(pumpMode);
     }
+
     gauge.modify(getID('vertGauge1'), {values:[gndTkLevel,100]});
     gauge.modify(getID('vertGauge2'), {values:[headTklevel,100]});
     
