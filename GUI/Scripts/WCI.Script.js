@@ -172,6 +172,13 @@ function controlPump() {
         buttonChange();
     });
 
+    function buttonChange() {
+        pumpAnimation(); 
+        txMode = true
+    };
+};
+
+function controlUnits(){
     $('#vertGauge1').click(function () {
         toggleUnits();
     });
@@ -179,11 +186,6 @@ function controlPump() {
     $('#vertGauge2').click(function () {
         toggleUnits();
     });
-
-    function buttonChange() {
-        pumpAnimation(); 
-        txMode = true
-    }
 
     function toggleUnits() {
         unitsVol = !unitsVol
@@ -202,6 +204,7 @@ function onWindowChange() {
 	gauge.remove(getID('vertGauge1')); 
 	gauge.remove(getID('vertGauge2')); 
 	initGauges(gaugeHeight);
+    controlUnits(); // To enable again unit togle units
 };
 
 // Attach listener function on state changes
@@ -220,7 +223,8 @@ function initWidgets() {
     TKstatusFault = true
     TKfaultStatus = false
     unitsVol = false
-    onOffButton = 'OFF'
+    pump = 'OFF'
+    pumpMode = 'Auto'
     pumpStatus = 'Ok'
     headTkStatus = 'Ok'
     gndTkStatus = 'Ok'
