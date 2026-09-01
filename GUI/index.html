@@ -23,11 +23,10 @@
   
     <script type="text/javascript">
         $(document).ready(function () {
-
             // Initialize Widgets
 			initWidgets();
 			// Initialize Gauges
-			onWindowChange(widthSmall);
+			onWindowChange();
             //Starts pump control buttons
             controlPump();
             // Update readings and status cyclic at 2000ms
@@ -48,7 +47,7 @@
     <div  id="controls" class="controls" >
             <div id="paneldiv" class="panel">
                 <div id="groundtkdiv" class="controlsContainer">
-                    <p class="label">Cisterna</p>
+                    <p class="label">&emsp;Cisterna&emsp;</p>
                     <div id="GroundTK">
                     </div>
                     <p id="volumeGTK" class="label">---- Lts</p>
