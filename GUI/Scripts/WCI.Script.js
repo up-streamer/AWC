@@ -50,12 +50,16 @@ function updateReadings() {
 
     gauge.modify(getID('vertGauge1'), {values:[gndTkLevel,100]});
     gauge.modify(getID('vertGauge2'), {values:[headTklevel,100]});
-    
-    if ((headTkStatus != 'Ok') || (gndTkStatus != 'Ok')) {
-        TKstatusFault = true;
+
+    if (unitsVol){
+        $('#volumeGTK').text(gndTkVol + " Lts");
+        $('#volumeHTK').text(headTkVol  + " Lts");
     } else {
-        TKstatusFault = false;
-    }
+        $('#volumeGTK').text(gndTkLevel  + " %");
+        $('#volumeHTK').text(headTklevel  + " %");
+    };
+
+    animateGaugeOnFault();
 
     if ((pumpStatus != 'Ok') || (headTkStatus != 'Ok') || (gndTkStatus != 'Ok') || (flowSrStatus != 'Ok')) {
 		statusFault = true;
@@ -72,42 +76,43 @@ function updateReadings() {
 		$("#statustext").empty();
         $("#statustext").append("Ok");
         $("#statustext").fadeIn("slow");
-
     }
-
-    if (unitsVol){
-        $('#volumeGTK').text(gndTkVol + " Lts");
-        $('#volumeHTK').text(headTkVol  + " Lts");
-    } else {
-        $('#volumeGTK').text(gndTkLevel  + " %");
-        $('#volumeHTK').text(headTklevel  + " %");
-    };
 
     pumpAnimation();
 };
 
+function animateGaugeOnFault() {
+    if (gndTkStatus != 'Ok') {
+        if (!vertGauge1Busy) {
+            gauge.modify(getID('vertGauge1'), { busy: true });
+            vertGauge1Busy = true;
+        }
+    } else {
+        if (vertGauge1Busy) {
+            gauge.modify(getID('vertGauge1'), { busy: false });
+            vertGauge1Busy = false;
+        }
+    };
+
+    if (headTkStatus != 'Ok') {
+        if (!vertGauge2Busy) {
+            gauge.modify(getID('vertGauge2'), { busy: true });
+            vertGauge2Busy = true;
+        }
+    } else {
+        if (vertGauge2Busy) {
+            gauge.modify(getID('vertGauge2'), { busy: false });
+            vertGauge2Busy = false;
+        }
+    };
+};
+
 function pumpAnimation() {
-    if ((onOffButton != $('#onOffButton').val()) || (TKstatusFault != TKfaultStatus)) {
-        animateGaugeOnFault();
+    if (onOffButton != $('#onOffButton').val()) {
         animatePump();
         animateButton();
         onOffButton = $('#onOffButton').val(); 
     }
-
-    function animateGaugeOnFault() {
-		if(gndTkStatus != 'Ok'){
-			gauge.modify(getID('vertGauge1'), {busy: true});
-		} else {
-			gauge.modify(getID('vertGauge1'), {busy: false});
-		}
-		
-		if(headTkStatus != 'Ok'){
-			gauge.modify(getID('vertGauge2'), {busy: true});
-		} else {
-			gauge.modify(getID('vertGauge2'), {busy: false});
-		}
-        TKfaultStatus = TKstatusFault;
-	};
 
     function animatePump() {
         if ($('#onOffButton').val() == 'ON') {
@@ -220,8 +225,8 @@ function initGauges (gaugeHeight) {
 
 function initWidgets() {
     statusFault = false
-    TKstatusFault = true
-    TKfaultStatus = false
+    vertGauge1Busy = false
+    vertGauge2Busy = false
     unitsVol = false
     pump = 'OFF'
     pumpMode = 'Auto'
