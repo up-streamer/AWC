@@ -209,7 +209,12 @@ function onWindowChange() {
 	gauge.remove(getID('vertGauge1')); 
 	gauge.remove(getID('vertGauge2')); 
 	initGauges(gaugeHeight);
-    controlUnits(); // To enable again unit togle units
+    // To enable again unit togle units
+    controlUnits(); 
+    // To enable again animation on fault
+    vertGauge1Busy = false;
+    vertGauge2Busy = false;
+    animateGaugeOnFault()
 };
 
 // Attach listener function on state changes
