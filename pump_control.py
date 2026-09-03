@@ -60,12 +60,12 @@ class PumpControl:
         return
 
     async def _run(self, sampleInterval):
-        await asyncio.sleep_ms(6000)
+        await asyncio.sleep_ms(2000) # Wait headTK first run
         while True:
             levelPerct = float(self.headTkLevel)
             if self.headTkErr and (self.pumpCommand == 'ON'):
                 self.err = 3 
-            err = self.err + self.flowOk
+            err = self.err + self.flowOk + self.headTkErr
 
             if self.mode == 'Auto':
                 if levelPerct >= self.stopPerct:
