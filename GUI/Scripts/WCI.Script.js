@@ -19,13 +19,30 @@ function getControls() {
         gndTkLevel = j.gndTkLevel;
         gndTkVol = j.gndTkVol;
         gndTkStatus = j.gndTkStatus;
-        flowSrStatus = j.flowSrStatus; 
+        flowSrStatus = j.flowSrStatus;
         console.log("jSON = " + JSON.stringify(j));
         updateReadings();
         // hide the activity widget
-        $("#waiting").fadeOut("slow");
-    });
+
+    })
+        .done(function () {
+            conected(true)
+            $("#waiting").fadeOut("slow");
+        })
+        .fail(function () {
+            conected(false)
+        });
 }
+
+function conected(status) {
+    if (status) {
+        if (isConected) { $("#conectionStatus").fadeOut("slow") };
+        isConected = false
+    } else {
+        if (!isConected) { $("#conectionStatus").fadeIn("slow") };
+        isConected = true
+    }
+};
 
 function updateControls() {
     $.getJSON("/updateControls", {
@@ -241,6 +258,7 @@ function initWidgets() {
     flowSrStatus = 'Ok'
     $('#onOffButton').attr('disabled', true);
 	txMode = false
+    isConected = true;
 };
 
 function txRxMode() {
