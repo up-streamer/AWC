@@ -20,13 +20,13 @@
 
     <script src="Scripts/WCI.Script.js" type="text/javascript"></script>
     <script src="Scripts/Netzgesta.Gauge.js" type="text/javascript"></script>
-  
+
     <script type="text/javascript">
         $(document).ready(function () {
             // Initialize Widgets
-			initWidgets();
-			// Initialize Gauges
-			onWindowChange();
+            initWidgets();
+            // Initialize Gauges
+            onWindowChange();
             //Starts pump control buttons
             controlPump();
             // Update readings and status cyclic at 2000ms
@@ -36,53 +36,53 @@
 </head>
 
 <body>
-        <!-- NavBar -->
-  <nav>
-    <ul>
-      <li><a href="#"> &emsp;Water Controller</a></li>
-      <li><a href="#">Graph&emsp;</a></li>
-    </ul>
-  </nav>
-         <!-- NavBar -->
-    <div  id="controls" class="controls" >
-            <div id="paneldiv" class="panel">
-                <div id="groundtkdiv" class="controlsContainer">
-                    <p class="label">&emsp;Cisterna&emsp;</p>
-                    <div id="GroundTK">
-                    </div>
-                    <p id="volumeGTK" class="label">---- Lts</p>
+    <!-- NavBar -->
+    <nav>
+        <ul>
+            <li><a href="#"> &emsp;Water Controller</a></li>
+            <li><a href="#">Graph&emsp;</a></li>
+        </ul>
+    </nav>
+    <!-- NavBar -->
+    <div id="controls" class="controls">
+        <div id="paneldiv" class="panel">
+            <div id="groundtkdiv" class="controlsContainer">
+                <p class="label">&emsp;Cisterna&emsp;</p>
+                <div id="GroundTK">
                 </div>
-                
-                <div id="pumpdiv" class="controlsContainer">
-                    <p class="label">Bomba</p>
-                    <input type="button" id="manualAutoButton" value="Auto" class="settingLabel" />
-                    <img id="pump" alt="pump" class= "pumpIcon"src="Content/images/pumpRound_Off.png">
-                    <input type="button" id="onOffButton" value="OFF" class="settingLabel" />
-
-                    <div id="spinnerdiv" style="margin-top: 10px; height:40px; width:60px "> 
-                        <div id="waiting" style="display: none">
-                            <br>
-                            <div class="loader" style="margin: auto"></div>
-                        </div>
-                        <div id="conectionStatus" style = "color: red">
-                            <span>Sem<br/>Conexão</span>
-                        </div>
-                    </div>
-
-                </div>
-                
-                <div id="headtkdiv" class="controlsContainer">
-                    <p class="label">Caixa D'água</p>
-                    <div id="HeadTK">
-                    </div>
-                    <p id="volumeHTK" class="label">---- Lts</p>
-                </div>
+                <p id="volumeGTK" class="label">---- Lts</p>
             </div>
-            <!-- Show error messages and infos -->
-            <div id="statustextdiv" style="height:120px; margin: 10px ;text-align: left;">
-                <input type="button" id="Status" value="Status:"/>
-                <p id="statustext" class="messageBox"></p>
+
+            <div id="pumpdiv" class="controlsContainer">
+                <p class="label">Bomba</p>
+                <input type="button" id="manualAutoButton" value="Auto" class="settingLabel" />
+                <img id="pump" alt="pump" class="pumpIcon" src="Content/images/pumpRound_Off.png">
+                <input type="button" id="onOffButton" value="OFF" class="settingLabel" />
+
+                <div id="spinnerdiv" style="margin-top: 10px; height:40px; width:60px ">
+                    <div id="waiting" style="display: none">
+                        <br>
+                        <div class="loader" style="margin: auto"></div>
+                    </div>
+                    <div id="conectionStatus" style="color: red">
+                        <span>Sem<br />Conexão</span>
+                    </div>
+                </div>
+
             </div>
+
+            <div id="headtkdiv" class="controlsContainer">
+                <p class="label">Caixa D'água</p>
+                <div id="HeadTK">
+                </div>
+                <p id="volumeHTK" class="label">---- Lts</p>
+            </div>
+        </div>
+        <!-- Show error messages and infos -->
+        <div id="statustextdiv" style="height:120px; margin: 10px ;text-align: left;">
+            <input type="button" id="Status" value="Status:" />
+            <p id="statustext" class="messageBox"></p>
+        </div>
     </div>
 </body>
 
