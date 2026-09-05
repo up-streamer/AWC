@@ -40,6 +40,7 @@ function conected(status) {
     } else {
         if (!isConected) { $("#conectionStatus").fadeIn("slow") };
         isConected = true
+        $('#statusButton').val('Status:');
     }
 };
 
@@ -86,12 +87,14 @@ function updateReadings() {
         $("#statustext").append("Cisterna: " + gndTkStatus + '<br/>');
         $("#statustext").append("Fluxo: " + flowSrStatus);
         $("#statustext").fadeIn("slow");
+        $('#statusButton').val('Status:');
     } else {
         statusFault = false;
         $("#statustext").fadeOut("slow");
         $("#statustext").empty();
         $("#statustext").append("Ok");
         $("#statustext").fadeIn("slow");
+        $('#statusButton').val('Status: Ok');
     }
 
     pumpAnimation();
@@ -222,7 +225,7 @@ var gaugeHeight
 var widthSmall = matchMedia("(max-width: 650px)")
 
 function onWindowChange() {
-    gaugeHeight = Math.floor(window.innerHeight / 1.87); //450
+    gaugeHeight = Math.floor(window.innerHeight / 1.87); // 840/450px = 1.87
     gauge.remove(getID('vertGauge1'));
     gauge.remove(getID('vertGauge2'));
     initGauges(gaugeHeight);
