@@ -1,114 +1,129 @@
 ﻿body {
-    font-family: Verdana, Segoe UI, Helvetica Neue, Trebuchet MS;
-    margin: 5px;
+  font-family: Verdana, Segoe UI, Helvetica Neue, Trebuchet MS;
+  margin: 5px;
 }
 
 .label {
-	text-align: center;
-	line-height: 0.5;
-	padding:10px;
-	margin:0px;
+  text-align: center;
+  line-height: 0.5;
+  padding: 10px;
+  margin: 0px;
 }
 
 .messageBox {
-    text-align: left;
-    display: flex;
+  text-align: left;
+  display: flex;
 }
 
-.settingLabel 
-{
-   padding: 5px 5px 5px 5px;
-   width: 100%;
+.settingLabel {
+  padding: 5px 5px 5px 5px;
+  width: 100%;
 }
 
-.controlsContainer
-{	
-	display: flex;
+.controlsContainer {
+  display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
   justify-content: center;
   align-items: center;
 }
 
-.pumpIcon
-{
+.pumpIcon {
   width: 100%;
   height: 100%;
   object-fit: fill;
 }
 
-.controls
-{
+.controls {
   text-align: center;
   background-image: url("images/backgrnd.jpg");
-
   /* Apply Border */
-    background-clip: content-box;
+  background-clip: content-box;
   border: 2px solid royalblue;
   border-radius: 12px;
   padding: 5px;
 }
 
-.panel
-{
-	display: flex;
-	justify-content: space-evenly;
-	min-height: 60vh;
-	align-items: center;
+.panel {
+  display: flex;
+  justify-content: space-evenly;
+  min-height: 60vh;
+  align-items: center;
 }
 
 .loader {
-    width: 40px;
-    height: 20px;
-    --c:radial-gradient(farthest-side,currentColor 93%,#0000);
-    background:
-      var(--c) 0    0,
-      var(--c) 50%  0,
-      var(--c) 100% 0;
-    background-size:10px 10px;
-    background-repeat: no-repeat;
-    position: relative;
-    animation: db4-0 1s linear infinite alternate;
-    color:springgreen;
+  width: 40px;
+  height: 20px;
+  --c: radial-gradient(farthest-side, currentColor 93%, #0000);
+  background:
+    var(--c) 0 0,
+    var(--c) 50% 0,
+    var(--c) 100% 0;
+  background-size: 10px 10px;
+  background-repeat: no-repeat;
+  position: relative;
+  animation: db4-0 1s linear infinite alternate;
+  color: springgreen;
+}
+
+.loader:before {
+  content: "";
+  position: absolute;
+  width: 8px;
+  height: 12px;
+  background: currentColor;
+  border: 1px solid red;
+  left: 0;
+  top: 0;
+  animation:
+    db4-1 1s linear infinite alternate,
+    db4-2 0.5s cubic-bezier(0, 200, .8, 200) infinite;
+}
+
+@keyframes db4-0 {
+  0% {
+    background-position: 0 100%, 50% 0, 100% 0
   }
-  .loader:before {
-    content: "";
-    position: absolute;
-    width: 8px;
-    height: 12px;
-    background:currentColor;
-    border: 1px solid red;
-    left:0;
-    top:0;
-    animation: 
-      db4-1 1s  linear infinite alternate,
-      db4-2 0.5s cubic-bezier(0,200,.8,200) infinite;
+
+  8%,
+  42% {
+    background-position: 0 0, 50% 0, 100% 0
   }
-  
-  @keyframes db4-0 {
-    0%      {background-position: 0  100%,50% 0   ,100% 0}
-    8%,42%  {background-position: 0  0   ,50% 0   ,100% 0}
-    50%     {background-position: 0  0   ,50% 100%,100% 0}
-    58%,92% {background-position: 0  0   ,50% 0   ,100% 0}
-    100%    {background-position: 0  0   ,50% 0   ,100% 100%}
+
+  50% {
+    background-position: 0 0, 50% 100%, 100% 0
   }
-  
-  @keyframes db4-1 {
-    100% {left:calc(100% - 8px)}
+
+  58%,
+  92% {
+    background-position: 0 0, 50% 0, 100% 0
   }
-  
-  @keyframes db4-2 {
-    100% {top:-0.1px}
+
+  100% {
+    background-position: 0 0, 50% 0, 100% 100%
   }
-  
-  /* NavBar */
+}
+
+@keyframes db4-1 {
+  100% {
+    left: calc(100% - 8px)
+  }
+}
+
+@keyframes db4-2 {
+  100% {
+    top: -0.1px
+  }
+}
+
+/* NavBar */
 nav {
   background-color: #333;
   /* Apply border */
   border: 2px solid royalblue;
   border-radius: 12px;
 }
- 
+
 nav ul {
   list-style-type: none;
   margin: 0;
@@ -117,24 +132,25 @@ nav ul {
   justify-content: space-around;
   place-items: center;
   /* justify-content: center; */
-   gap: 30%;
+  gap: 30%;
 }
- 
+
 nav ul li {
   padding: 3px;
 }
- 
+
 nav ul li a {
   color: white;
   text-decoration: none;
 }
 
-/* Selects the firstli element in a list */
+/* Selects the first li element in a list */
 li:nth-of-type(1) {
-  flex-grow: 1; 
+  flex-grow: 1;
   font: 25px Arial;
   font-weight: bold;
 }
+
 .menu -icon {
   display: none;
   color: white;
@@ -142,22 +158,22 @@ li:nth-of-type(1) {
   padding: 3px;
   cursor: pointer;
 }
- 
+
 @media screen and (max-width: 650px) {
   li:nth-of-type(1) {
     font: 20px Arial;
   }
 }
- 
-  .menu -icon {
-    display: block;
-  }
- 
-  #menu -toggle:checked~ul {
-    display: flex;
-  }
+
+.menu -icon {
+  display: block;
+}
+
+#menu -toggle:checked~ul {
+  display: flex;
+}
 
 
-  /* https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_responsive_header */
+/* https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_responsive_header */
 
-  /* https://www.tutorialpedia.org/blog/disappearing-navigation-bar-in-html-and-css-responsive/ */
+/* https://www.tutorialpedia.org/blog/disappearing-navigation-bar-in-html-and-css-responsive/ */
