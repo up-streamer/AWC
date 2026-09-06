@@ -16,6 +16,12 @@ Country_PASSWORD = "RicArd0!2E"
 IoT_SSID = "IoT"
 IoT_PASSWORD = "a1b2c3d4"
 
+# Static IP configuration for SweetHome
+STATIC_IP = "192.168.10.250"
+SUBNET_MASK = "255.255.255.0"
+GATEWAY = "192.168.10.1"
+DNS = "8.8.8.8"
+
 async def do_connect():
     ssid = None
     psw = None
@@ -39,6 +45,8 @@ async def do_connect():
     elif b'SweetHome' in names:
         ssid = Country_SSID
         psw = Country_PASSWORD
+        # Set static IP before connecting
+        wlan.ifconfig((STATIC_IP, SUBNET_MASK, GATEWAY, DNS))
     elif  b'IoT' in names:
         ssid = IoT_SSID
         psw = IoT_PASSWORD
